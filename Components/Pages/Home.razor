@@ -1,8 +1,9 @@
 ﻿@page "/"
 @using Microsoft.EntityFrameworkCore
+
 @using Todo
-@using Todo.DAL.Data
-@using Todo.DAL.Models
+@using Todo.Data
+@using Todo.Models
 @using Todo.Data
 @using Todo.Models
 @inject ApplicationDbContext DbContext
@@ -77,7 +78,7 @@
                 }
                 else if(todoItem.Erledigt == true)
                 {   
-                <button class="btn btn-danger btn-sm me-1" @onclick="() => RemoveMarkAsDone(todoItem)">Zurücksetzten</button>
+                    <button class="btn btn-danger btn-sm me-1" @onclick="() => RemoveMarkAsDone(todoItem)">Zurücksetzten</button>
                 }
 
 
@@ -87,6 +88,8 @@
         </div>
     </div>
 }
+    
+
 
 <style>
     .grid-container {
@@ -121,19 +124,15 @@
 
 
 
-
+ var todorepository = new TodoReposetory();
+    var TodoService = new TodoService(todorepository);
 
 
 
 @code{
-    private List<TodoItem> TodoList = new ();
+    private List<TodoItem> TodoList = new();
 
-    protected override async  Task OnInitializedAsync()
-    {
-
-        TodoList = await DbContext.TodoItems.ToListAsync();
-
-    }
+   
 
     private string newTitle;
     private string newDiscription;
@@ -142,9 +141,8 @@
     private string editDescription;
     //
     private int editId;
-
    
-
+    
 
     private async void Add()
     {
@@ -153,11 +151,7 @@
                 Titel = newTitle,
                 Discription = newDiscription
             };
-
-        DbContext.TodoItems.Add(newTodo);
-        await DbContext.SaveChangesAsync();
-
-        TodoList = await DbContext.TodoItems.ToListAsync();
+		TodoService.AddTodoItem(newTodo);
         newTitle = String.Empty;
         newDiscription = String.Empty;
         StateHasChanged();
