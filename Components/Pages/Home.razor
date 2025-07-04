@@ -1,0 +1,225 @@
+﻿@page "/"
+@using Microsoft.EntityFrameworkCore
+@using Todo
+@using Todo.Models
+@using Todo.Data
+@inject Todo.Data.ApplicationDbContext DbContext
+
+@rendermode InteractiveServer
+
+<h3>TODOs</h3>
+
+<div class="mb-2">
+    <input type="text" class="form-control mb-1" @bind="newTitle" placeholder="Neues TODO Titel" />
+    <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
+    <button class="btn btn-primary mb-2" @onclick="Add">Hinzufügen</button>
+
+    <br />
+    <button class="btn btn-warning mb-2" @onclick="() => TodoList = TodoList.OrderBy(t => t.Titel).ToList()" >Sortieren nach Titel</button>
+    <butten class="btn btn-warning mb-2" @onclick="() => TodoList = TodoList.OrderBy(i => i.Id).ToList()">Sortiren nach ID</butten>
+    <butten class="btn btn-warning mb-2" @onclick="() => TodoList = TodoList.OrderBy(i => i.Erledigt).ToList()">Sortiren Status</butten>
+</div>
+
+
+<br />
+
+<div class="grid-container grid-header">
+    <div class="grid-cell">ID</div>
+    <div class="grid-cell">Titel</div>
+    <div class="grid-cell">Beschreibung</div>
+    <div class="grid-cell">Status</div>
+    <div class="grid-cell">Aktionen</div>
+
+</div>
+
+
+@foreach (var todoItem in TodoList)
+{
+    <div class="grid-container grid-row">
+        <div class="grid-cell">@todoItem.Id</div>
+
+        @if (editId == todoItem.Id)
+        {
+            <div class="grid-cell"><input class="form-control" @bind="editTitle" /></div>
+            <div class="grid-cell"><input class="form-control" @bind="editDescription" /></div>
+        }
+        else
+        {
+            <div class="grid-cell">@todoItem.Titel</div>
+            <div class="grid-cell">@todoItem.Discription</div>
+        }
+
+        <div class="grid-cell">
+            @if (todoItem.Erledigt)
+            {
+                <span class="text-success">Erledigt</span>
+            }
+            else
+            {
+                <span class="text-warning">Offen</span>
+            }
+        </div>
+
+        <div class="grid-cell">
+            @if (editId == todoItem.Id)
+            {
+                <button class="btn btn-success btn-sm me-1" @onclick="() => SaveEdit(todoItem)">Fertig</button>
+                <button class="btn btn-secondary btn-sm" @onclick="CancelEdit">Zurück</button>
+            }
+            else
+            { 
+                if(todoItem.Erledigt == false)
+                {
+
+                    <button class="btn btn-success btn-sm me-1" @onclick="() => MarkAsDone(todoItem)">Erledigen</button>
+                }
+                else if(todoItem.Erledigt == true)
+                {   
+                <button class="btn btn-danger btn-sm me-1" @onclick="() => RemoveMarkAsDone(todoItem)">Zurücksetzten</button>
+                }
+
+
+                <button class="btn btn-danger btn-sm me-1" @onclick="() => RemoveTodo(todoItem)">Löschen</button>
+                <button class="btn btn-primary btn-sm" @onclick="() => StartEdit(todoItem)">Bearbeiten</button>
+            }
+        </div>
+    </div>
+}
+
+<style>
+    .grid-container {
+    display: grid;
+    grid-template-columns: 40px 150px 200px 100px 280px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 7px;
+    }
+
+    .grid-header {
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+    }
+
+    .grid-row {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+    }
+
+    .grid-cell {
+    overflow: hidden;
+    }
+
+    .form-control {
+    width: 100%;
+    padding: 4px;
+    }
+</style>
+
+
+
+
+
+
+
+
+@code{
+    private List<TodoItem> TodoList = new ();
+
+    protected override async  Task OnInitializedAsync()
+    {
+
+        TodoList = await DbContext.TodoItems.ToListAsync();
+
+    }
+
+    private string newTitle;
+    private string newDiscription;
+    //
+    private string editTitle;
+    private string editDescription;
+    //
+    private int editId;
+
+   
+
+
+    private async void Add()
+    {
+        var newTodo = new TodoItem
+            {
+                Titel = newTitle,
+                Discription = newDiscription
+            };
+
+        DbContext.TodoItems.Add(newTodo);
+        await DbContext.SaveChangesAsync();
+
+        TodoList = await DbContext.TodoItems.ToListAsync();
+        newTitle = String.Empty;
+        newDiscription = String.Empty;
+        StateHasChanged();
+    }
+
+    private void StartEdit(TodoItem item)
+    {
+        if (item == null || item.Titel == null || item.Discription == null)
+        {
+            return;
+        }
+        editId = item.Id;
+        editTitle = item.Titel;
+        editDescription = item.Discription;
+
+    }
+
+    private void CancelEdit()
+    {
+        editId = 0;
+        StateHasChanged();
+           
+        }
+
+    private async void SaveEdit(TodoItem item)
+    {
+        item.Titel = editTitle;
+        item.Discription = editDescription;
+        await DbContext.SaveChangesAsync();
+        editId = 0; 
+        TodoList = await DbContext.TodoItems.ToListAsync();
+        StateHasChanged();
+    }
+
+        private async void RemoveTodo(TodoItem item) 
+
+        {
+            DbContext.TodoItems.RemoveRange(DbContext.TodoItems.Where(i => i.Id == item.Id));    
+            await DbContext.SaveChangesAsync();
+            TodoList = await DbContext.TodoItems.ToListAsync();
+            StateHasChanged();
+        }
+
+        private async void MarkAsDone(TodoItem item)
+        {
+            item.Erledigt = true;
+            await DbContext.SaveChangesAsync();
+            TodoList = await DbContext.TodoItems.ToListAsync();
+            StateHasChanged();
+        
+        
+        }
+        
+         private async void RemoveMarkAsDone(TodoItem item)
+        {
+            item.Erledigt = false;
+            await DbContext.SaveChangesAsync();
+            TodoList = await DbContext.TodoItems.ToListAsync();
+            StateHasChanged();
+        
+        
+        }
+
+
+}
+
+
