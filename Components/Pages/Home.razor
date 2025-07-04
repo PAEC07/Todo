@@ -1,9 +1,11 @@
 ﻿@page "/"
 @using Microsoft.EntityFrameworkCore
 @using Todo
-@using Todo.Models
+@using Todo.DAL.Data
+@using Todo.DAL.Models
 @using Todo.Data
-@inject Todo.Data.ApplicationDbContext DbContext
+@using Todo.Models
+@inject ApplicationDbContext DbContext
 
 @rendermode InteractiveServer
 
