@@ -1,7 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Todo;
 using Todo.Components;
-
+using Todo.Models;
+using Todo.Reposetory;
 using Todo.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +14,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-var repository = new TodoReposetory();
-var todoService = new TodoService(repository);
+builder.Services.AddScoped<TodoReposetory, IReposetory>();
+
+
+
 
 
 var app = builder.Build();

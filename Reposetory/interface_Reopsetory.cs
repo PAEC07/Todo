@@ -1,9 +1,11 @@
 ﻿using System;
-
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Todo.Models;
 
 namespace Todo
 {
-    public interface TodoIReposetory 
+    public interface IReposetory
     {
         
         public  Task<List<TodoItem>> Get();
