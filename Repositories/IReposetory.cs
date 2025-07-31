@@ -3,15 +3,16 @@ using Todo.Data;
 using System.Threading.Tasks;
 using Todo.Models;
 using Todo.Models;
+using InterfaceIRepository;
 using Microsoft.EntityFrameworkCore;
-// Using fehlt kann aber nicht hinzugefügt werden, da es sonst zu einem Fehler kommt
-namespace Todo
+
+namespace Repository
 {
-    public class TodoReposetory : IReposetory
+    public class TodoIRepository : IRepository<TodoItem>
     {
         private readonly ApplicationDbContext _DbContext;
 
-        public TodoReposetory(ApplicationDbContext DbContext) {
+        public TodoIRepository(ApplicationDbContext DbContext) {
             _DbContext = DbContext; 
         
         

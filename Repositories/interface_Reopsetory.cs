@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Todo.Models;
 
-namespace Todo
+namespace InterfaceIRepository
 {
-    public interface IReposetory
+    public interface IRepository<TodoItem>
+        
     {
         
-        public  Task<List<TodoItem>> Get();
+        public  Task<List<TodoItem >> Get();
 
         public Task<TodoItem> Get(Guid id);
 

@@ -2,8 +2,10 @@
 using Todo;
 using Todo.Components;
 using Todo.Models;
-using Todo.Reposetory;
+
 using Todo.Data;
+using Repository;
+using InterfaceIRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +16,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped<TodoReposetory, IReposetory>();
+bool v = builder.Services.AddScoped < TodoIRepository;
+
+
 
 
 

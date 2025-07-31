@@ -6,6 +6,10 @@
 @using Todo.Models
 @using Todo.Data
 @using Todo.Models
+@using Repository
+@using Todo.TodoService;
+
+
 @inject ApplicationDbContext DbContext
 @inject  TodoReposetory  IReposetory
 
@@ -152,7 +156,7 @@
                 Titel = newTitle,
                 Discription = newDiscription
             };
-		TodoService.AddTodoItem(newTodo);
+        TodoService.AddTodoItem(newTodo);
         newTitle = String.Empty;
         newDiscription = String.Empty;
         StateHasChanged();
