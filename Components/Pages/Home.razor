@@ -11,7 +11,7 @@
 
 
 @inject ApplicationDbContext DbContext
-@inject  TodoReposetory  IReposetory
+@inject TodoIRepository IReposetory
 
 @rendermode InteractiveServer
 
@@ -93,7 +93,7 @@
         </div>
     </div>
 }
-    
+
 
 
 <style>
@@ -129,14 +129,15 @@
 
 
 
- var todorepository = new TodoReposetory();
-    var TodoService = new TodoService(todorepository);
+var todorepository = new TodoReposetory();
+var TodoService = new TodoService(todorepository);
 
 
 
 @code{
     private List<TodoItem> TodoList = new();
-
+    
+   
    
 
     private string newTitle;
