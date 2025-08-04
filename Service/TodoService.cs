@@ -5,9 +5,9 @@ namespace Todo.TodoService
 {
     public class TodoService
     {
-        private readonly IRepository<TodoItem> _todoreposetory;
+        private readonly IRepository _todoreposetory;
 
-        public TodoService(IRepository<TodoItem> todoreposetory)
+        public TodoService(IRepository todoreposetory)
         {
             _todoreposetory = todoreposetory;
         }

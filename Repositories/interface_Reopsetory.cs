@@ -5,7 +5,7 @@ using Todo.Models;
 
 namespace InterfaceIRepository
 {
-    public interface IRepository<TodoItem>
+    public interface IRepository
         
     {
         

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
-    public class TodoIRepository : IRepository<TodoItem>
+    public class TodoIRepository : IRepository
     {
         private readonly ApplicationDbContext _DbContext;
 

@@ -135,6 +135,7 @@ var TodoService = new TodoService(todorepository);
 
 
 @code{
+    private TodoService TodoService { get; set; }
     private List<TodoItem> TodoList = new();
     
    
@@ -152,6 +153,10 @@ var TodoService = new TodoService(todorepository);
 
     private async void Add()
     {
+		if (string.IsNullOrWhiteSpace(newTitle) || string.IsNullOrWhiteSpace(newDiscription))
+		{
+			return; // Eingabe überprüfen
+		}
         var newTodo = new TodoItem
             {
                 Titel = newTitle,
