@@ -4,10 +4,13 @@
 @using Todo
 @using Todo.Data
 @using Todo.Models
-@using Todo.Data
-@inject Todo.Data.ApplicationDbContext DbContext
+@using Repository
+@using TodoServiceNamespace
 
 
+@inject ApplicationDbContext DbContext
+@inject TodoIRepository IReposetory
+@inject TodoService todoService
 
 @rendermode InteractiveServer
 
@@ -129,10 +132,10 @@
 
 
 @code{
-    private TodoService TodoService { get; set; }
-    private List<TodoItem> TodoList = new();
-    private TodoIRepository todoIRepository { get; set; }
 
+    private TodoService TodoService { get; set; }
+    private List<TodoItem> TodoList =new();
+    private TodoIRepository todoIRepository { get; set; }
 
 
     private string newTitle = "" ;
@@ -143,7 +146,13 @@
     //
     private int editId;
 
+    protected override async Task OnInitializedAsync()
+    {
+        int x = 1;
+        TodoList = await TodoService.GetAllTodoItems();
 
+    }
+    
 
     private async void Add()
     {
@@ -157,13 +166,9 @@
                 Discription = newDiscription
             };
        
-       
-
+    
             await TodoService.AddTodoItem(newTodo);
-        //Voherige verison
-        //DbContext.TodoItems.Add(newTodo);
-        //await DbContext.SaveChangesAsync();
-       
+        
         newTitle = String.Empty;
         newDiscription = String.Empty;
         StateHasChanged();

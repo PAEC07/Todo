@@ -38,7 +38,7 @@ namespace TodoServiceNamespace
             await _todoreposetory.MarkAsComplete(id);
         }
 
-        public async Task<TodoItem> GetTodoItem(Guid id)
+        public async Task<TodoItem> GetTodoItemByID(int id)
         {
             return await _todoreposetory.Get(id);
         }

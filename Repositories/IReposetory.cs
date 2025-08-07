@@ -54,8 +54,8 @@ namespace Repository
             return await _DbContext.TodoItems.ToListAsync();
 
         }
-
-        public async Task<TodoItem> Get(Guid id)
+        //auf int geändert
+        public async Task<TodoItem> Get(int id)
         {
             return await _DbContext.TodoItems.FindAsync(id);
 

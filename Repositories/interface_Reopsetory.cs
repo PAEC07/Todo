@@ -13,8 +13,8 @@ namespace InterfaceIRepository
     {
         
         public  Task<List<TodoItem >> Get();
-
-        public Task<TodoItem> Get(Guid id);
+        //auf int geändert
+        public Task<TodoItem> Get(int id);
 
         public Task Add(TodoItem todoItem);
 
