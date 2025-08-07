@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Todo;
 using Todo.Components;
-using Todo.Models;
-using InterfaceIRepository;
+using TodoServiceNamespace;
 using Todo.Data;
 using Repository;
-using Nest;
-using Todo.TodoService;
+using InterfaceIRepository;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +17,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped < IRepository,TodoIRepository>();
+builder.Services.AddScoped <IRepository , TodoIRepository >();
+builder.Services.AddScoped <TodoIRepository>();
 builder.Services.AddScoped<TodoService>();
 
 

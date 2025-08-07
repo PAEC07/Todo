@@ -1,8 +1,8 @@
-﻿using System;
-using Todo.Models;
+﻿using Todo.Models;
 using InterfaceIRepository;
-using System.Threading.Tasks;
-namespace Todo.TodoService
+using Repository;
+
+namespace TodoServiceNamespace
 {
     public class TodoService
     {
@@ -26,6 +26,16 @@ namespace Todo.TodoService
         public async Task DeleteTodoItem(TodoItem item)
         {
             await _todoreposetory.Delete(item);
+        }
+
+        public async Task MarkAsComplete(TodoItem id)
+        {
+            await _todoreposetory.MarkAsComplete(id);
+        }
+        
+        public async Task RemoveMarkAsComplete(TodoItem id)
+        {
+            await _todoreposetory.MarkAsComplete(id);
         }
 
         public async Task<TodoItem> GetTodoItem(Guid id)

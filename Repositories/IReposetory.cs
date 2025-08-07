@@ -1,10 +1,7 @@
-﻿using System;
-using Todo.Data;
-using System.Threading.Tasks;
+﻿using Todo.Data;
 using Todo.Models;
-using Todo.Models;
-using InterfaceIRepository;
 using Microsoft.EntityFrameworkCore;
+using InterfaceIRepository;
 
 namespace Repository
 {
@@ -14,8 +11,6 @@ namespace Repository
 
         public TodoIRepository(ApplicationDbContext DbContext) {
             _DbContext = DbContext; 
-        
-        
         }
     
         public async Task Add(TodoItem item)
@@ -33,6 +28,27 @@ namespace Repository
              _DbContext.TodoItems.Remove(item);
             await _DbContext.SaveChangesAsync();
         }
+
+        public async Task MarkAsComplete(TodoItem id)
+        {
+            var item = await _DbContext.TodoItems.FindAsync(id);
+            if (item != null)
+            {
+                item.Erledigt = true;
+                _DbContext.TodoItems.Update(item);
+            }
+        }
+
+        public async Task RemooveMarkAsIncomplete(TodoItem id)
+        {
+            var item = await _DbContext.TodoItems.FindAsync(id);
+            if (item != null)
+            {
+                item.Erledigt = false;
+                _DbContext.TodoItems.Update(item);
+            }
+        }
+
         public async Task<List<TodoItem>> Get()
         {
             return await _DbContext.TodoItems.ToListAsync();
