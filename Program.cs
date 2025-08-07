@@ -6,6 +6,7 @@ using InterfaceIRepository;
 using Todo.Data;
 using Repository;
 using Nest;
+using Todo.TodoService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,11 +17,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped < IRepository, TodoIRepository>();
-
-
-
-
+builder.Services.AddScoped < IRepository,TodoIRepository>();
+builder.Services.AddScoped<TodoService>();
 
 
 

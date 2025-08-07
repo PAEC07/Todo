@@ -1,6 +1,7 @@
 ﻿using System;
 using Todo.Models;
 using InterfaceIRepository;
+using System.Threading.Tasks;
 namespace Todo.TodoService
 {
     public class TodoService
@@ -12,13 +13,30 @@ namespace Todo.TodoService
             _todoreposetory = todoreposetory;
         }
 
-        public void AddTodoItem(TodoItem item)
+        public async Task AddTodoItem(TodoItem item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            _todoreposetory.Add(item);
+            await _todoreposetory.Add(item);    
         }
+        
+        public async Task UpdateTodoItem(TodoItem item)
+        {
+            await _todoreposetory.Update(item);
+        }
+
+        public async Task DeleteTodoItem(TodoItem item)
+        {
+            await _todoreposetory.Delete(item);
+        }
+
+        public async Task<TodoItem> GetTodoItem(Guid id)
+        {
+            return await _todoreposetory.Get(id);
+        }
+
+        public async Task<List<TodoItem>> GetAllTodoItems()
+        {
+            return await _todoreposetory.Get();
+        }
+
     }
 }
-
-
-//https://www.youtube.com/watch?v=rsfYoA4LsS8&t=205s

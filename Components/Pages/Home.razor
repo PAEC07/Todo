@@ -4,14 +4,13 @@
 @using Todo
 @using Todo.Data
 @using Todo.Models
-@using Todo.Data
-@using Todo.Models
 @using Repository
 @using Todo.TodoService;
 
 
 @inject ApplicationDbContext DbContext
 @inject TodoIRepository IReposetory
+@inject TodoService todoService
 
 @rendermode InteractiveServer
 
@@ -137,15 +136,15 @@ var TodoService = new TodoService(todorepository);
 @code{
     private TodoService TodoService { get; set; }
     private List<TodoItem> TodoList = new();
-    
+	private TodoIRepository todoIRepository { get; set; }
    
    
 
-    private string newTitle;
-    private string newDiscription;
+    private string newTitle = "";
+    private string newDiscription = "";
     //
-    private string editTitle;
-    private string editDescription;
+    private string editTitle = "";
+    private string editDescription = "";
     //
     private int editId;
    
@@ -162,7 +161,7 @@ var TodoService = new TodoService(todorepository);
                 Titel = newTitle,
                 Discription = newDiscription
             };
-        TodoService.AddTodoItem(newTodo);
+        await TodoService.AddTodoItem(newTodo);
         newTitle = String.Empty;
         newDiscription = String.Empty;
         StateHasChanged();
