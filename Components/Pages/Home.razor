@@ -4,13 +4,10 @@
 @using Todo
 @using Todo.Data
 @using Todo.Models
-@using Repository
-@using TodoServiceNamespace
+@using Todo.Data
+@inject Todo.Data.ApplicationDbContext DbContext
 
 
-@inject ApplicationDbContext DbContext
-@inject TodoIRepository IReposetory
-@inject TodoService todoService
 
 @rendermode InteractiveServer
 
