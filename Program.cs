@@ -43,3 +43,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+
+
+//Vidio https://www.youtube.com/watch?v=lI9oOGuXaQY Minute 13:40
