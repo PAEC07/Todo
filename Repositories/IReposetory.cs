@@ -2,65 +2,86 @@
 using Todo.Models;
 using Microsoft.EntityFrameworkCore;
 using InterfaceIRepository;
+using System.Net.Security;
 
 namespace Repository
 {
-    public class TodoIRepository : IRepository
+    public class TodoIRepository 
     {
-        private readonly ApplicationDbContext _DbContext;
-
-        public TodoIRepository(ApplicationDbContext DbContext) {
-            _DbContext = DbContext; 
+        private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
+        public TodoIRepository(IDbContextFactory<ApplicationDbContext> contextFactory) {
+            _contextFactory = contextFactory; 
         }
-    
+
+        public Dbset<TodoItem> TodoItems
+
         public async Task Add(TodoItem item)
         {
-            await _DbContext.TodoItems.AddAsync(item);
-            await _DbContext.SaveChangesAsync();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                if (item == null)
+                {
+                    throw new ArgumentNullException(nameof(item), "TodoItem cannot be null");
+                }
+                context.TodoItems.Add(item);
+                await context.SaveChangesAsync();
+            }
+
         }
+
         public async Task Update(TodoItem item)
         {
-            _DbContext.TodoItems.Update(item);
-            await _DbContext.SaveChangesAsync();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                context.TodoItems.Update(item);
+                await context.SaveChangesAsync();
+            }
         }
+
+
+        
         public async Task Delete(TodoItem item)
         {
-             _DbContext.TodoItems.Remove(item);
-            await _DbContext.SaveChangesAsync();
-        }
-
-        public async Task MarkAsComplete(TodoItem id)
-        {
-            var item = await _DbContext.TodoItems.FindAsync(id);
-            if (item != null)
+         using (var context = _contextFactory.CreateDbContext())
             {
-                item.Erledigt = true;
-                _DbContext.TodoItems.Update(item);
+                if (item != null)
+                {
+                    context.TodoItems.Remove(item);
+                    await context.SaveChangesAsync();
+                   
+                    
+                    return;
+                }
+                
             }
+
+
         }
 
-        public async Task RemooveMarkAsIncomplete(TodoItem id)
-        {
-            var item = await _DbContext.TodoItems.FindAsync(id);
-            if (item != null)
-            {
-                item.Erledigt = false;
-                _DbContext.TodoItems.Update(item);
-            }
-        }
+        
 
+        
         public async Task<List<TodoItem>> Get()
         {
-            return await _DbContext.TodoItems.ToListAsync();
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                return await context.TodoItems.ToListAsync();// 
+            }
 
         }
-        //auf int geändert
+    
         public async Task<TodoItem> Get(int id)
         {
-            return await _DbContext.TodoItems.FindAsync(id);
-
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                return await context.TodoItems.FindAsync(id) ?? new TodoItem(-1, "Fehler", "Fehler", false);
+            }
         }
 
+        public Task MarkAsComplete(TodoItem id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

@@ -1,11 +1,13 @@
 ﻿@page "/"
 @using Microsoft.EntityFrameworkCore
-
+@using Microsoft.AspNetCore.Components.Web
 @using Todo
 @using Todo.Data
 @using Todo.Models
 @using Repository
 @using TodoServiceNamespace
+
+
 
 
 @inject ApplicationDbContext DbContext
@@ -47,7 +49,7 @@
 
         @if (editId == todoItem.Id)
         {
-            <div class="grid-cell"><input class="form-control" @bind="editTitle" /></div>
+            <div class="grid-cell"><input class="form-control" @bind="EditTitle" /></div>
             <div class="grid-cell"><input class="form-control" @bind="editDescription" /></div>
         }
         else
@@ -132,28 +134,40 @@
 
 
 @code{
-
-    private TodoService TodoService { get; set; }
+	//-------------------Services and Repositories------------------
+    private TodoService TodoService { get; set; } = default!;
     private List<TodoItem> TodoList =new();
-    private TodoIRepository todoIRepository { get; set; }
+    private TodoIRepository todoIRepository { get; set; } = default;
+	
+	
 
+	//-------------------Parameter-------------------
 
     private string newTitle = "" ;
     private string newDiscription = "";
-    //
-    private string editTitle = "";
+    
+    public string EditTitle = "";
     private string editDescription = "";
-    //
+    
     private int editId;
-
+	
+    
+	//----------------------OnInitializedAsync-------------------
     protected override async Task OnInitializedAsync()
     {
-        int x = 1;
-        TodoList = await TodoService.GetAllTodoItems();
+		TodoService service = new TodoService( IReposetory);
+		TodoList = await TodoService.GetAllTodoItems();
+		editId = 0; // Initialisieren der editId
+		newTitle = String.Empty;
+		newDiscription = String.Empty;
+		EditTitle = String.Empty;
+		editDescription = String.Empty;
+        
 
     }
-    
+	
 
+	//-----------------------------Add----------------------------
     private async void Add()
     {
         if (string.IsNullOrWhiteSpace(newTitle) || string.IsNullOrWhiteSpace(newDiscription))
@@ -165,42 +179,38 @@
                 Titel = newTitle,
                 Discription = newDiscription
             };
-       
-    
-            await TodoService.AddTodoItem(newTodo);
-        
+
+        await TodoService.AddTodoItem(newTodo);
+
         newTitle = String.Empty;
         newDiscription = String.Empty;
         StateHasChanged();
-    }
-
-    private void StartEdit(TodoItem item)
-    {
-        if (item == null || item.Titel == null || item.Discription == null)
-        {
-            return;
-        }
-        editId = item.Id;
-        editTitle = item.Titel;
-        editDescription = item.Discription;
 
     }
 
-    private void CancelEdit()
-    {
-        editId = 0;
-        StateHasChanged();
 
-    }
+	//------------------------------Edit----------------------------
 
-    private async void SaveEdit(TodoItem item)
-    {
-        item.Titel = editTitle;
-        item.Discription = editDescription;
-        editId = 0; 
-        await TodoService.UpdateTodoItem(item);
-    }
+    private async void StartEdit(TodoItem item)
+                {
+                await TodoService.StartEdit(item, EditTitle, editDescription);
+                }
 
+                private void CancelEdit()
+                {
+                    editId = 0;
+                    StateHasChanged();
+                    return;
+                }
+
+                private async void SaveEdit(TodoItem item)
+                {
+                    editId = 0; 
+        await TodoService.SaveEdit(item, EditTitle, editDescription);
+                }
+	
+
+	//-----------------------------Remove------------------------------
     private async void RemoveTodo(TodoItem item) 
 
     {
@@ -208,7 +218,9 @@
         StateHasChanged();
 
     }
-
+	
+    
+	//-------------------Mark as Done & Remove Mark As Done-------------
     private async void MarkAsDone(TodoItem item)
     {
         await TodoService.MarkAsComplete(item);
@@ -223,7 +235,7 @@
         await TodoService.RemoveMarkAsComplete(item);
         StateHasChanged();
     }
-
+	
 
 }
 
