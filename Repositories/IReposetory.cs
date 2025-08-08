@@ -13,7 +13,7 @@ namespace Repository
             _contextFactory = contextFactory; 
         }
 
-        public Dbset<TodoItem> TodoItems
+        
 
         public async Task Add(TodoItem item)
         {
@@ -65,7 +65,7 @@ namespace Repository
         {
             using (var context = _contextFactory.CreateDbContext())
             {
-                return await context.TodoItems.ToListAsync();// 
+                return await context.TodoItems.ToListAsync();// Hier wird eine Leere liste übergeben 
             }
 
         }
