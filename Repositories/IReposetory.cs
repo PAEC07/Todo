@@ -3,58 +3,42 @@ using Todo.Models;
 using Microsoft.EntityFrameworkCore;
 using InterfaceIRepository;
 using System.Net.Security;
+using Microsoft.EntityFrameworkCore.Internal;
+
+
 
 namespace Repository
 {
-    public class TodoIRepository 
+    public class TodoIRepository : IRepository
     {
-        private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
-        public TodoIRepository(IDbContextFactory<ApplicationDbContext> contextFactory) {
-            _contextFactory = contextFactory; 
+        private readonly ApplicationDbContext _DbContext;
+        public TodoIRepository(ApplicationDbContext DbContext) {
+            _DbContext = DbContext; 
         }
 
         
 
         public async Task Add(TodoItem item)
         {
-            using (var context = _contextFactory.CreateDbContext())
-            {
-                if (item == null)
-                {
-                    throw new ArgumentNullException(nameof(item), "TodoItem cannot be null");
-                }
-                context.TodoItems.Add(item);
-                await context.SaveChangesAsync();
-            }
 
+                _DbContext.TodoItems.Add(item);
+                await _DbContext.SaveChangesAsync();
+                
         }
 
         public async Task Update(TodoItem item)
         {
-            using (var context = _contextFactory.CreateDbContext())
-            {
-                context.TodoItems.Update(item);
-                await context.SaveChangesAsync();
-            }
+                _DbContext.TodoItems.Update(item);
+                await _DbContext.SaveChangesAsync();
         }
 
 
         
         public async Task Delete(TodoItem item)
         {
-         using (var context = _contextFactory.CreateDbContext())
-            {
-                if (item != null)
-                {
-                    context.TodoItems.Remove(item);
-                    await context.SaveChangesAsync();
-                   
-                    
-                    return;
-                }
-                
-            }
-
+        
+                    _DbContext.TodoItems.Remove(item);
+                     await _DbContext.SaveChangesAsync();
 
         }
 
@@ -63,19 +47,20 @@ namespace Repository
         
         public async Task<List<TodoItem>> Get()
         {
-            using (var context = _contextFactory.CreateDbContext())
+            
             {
-                return await context.TodoItems.ToListAsync();// Hier wird eine Leere liste übergeben 
+                return await _DbContext.TodoItems.ToListAsync();// Hier wird eine Leere liste übergeben 
+               
             }
 
         }
     
         public async Task<TodoItem> Get(int id)
         {
-            using (var context = _contextFactory.CreateDbContext())
-            {
-                return await context.TodoItems.FindAsync(id) ?? new TodoItem(-1, "Fehler", "Fehler", false);
-            }
+          
+            
+                return await _DbContext.TodoItems.FindAsync(id) ?? new TodoItem(-1, "Fehler", "Fehler", false);
+            
         }
 
         public Task MarkAsComplete(TodoItem id)

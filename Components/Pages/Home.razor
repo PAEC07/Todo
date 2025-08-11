@@ -50,7 +50,7 @@
         @if (editId == todoItem.Id)
         {
             <div class="grid-cell"><input class="form-control" @bind="EditTitle" /></div>
-            <div class="grid-cell"><input class="form-control" @bind="editDescription" /></div>
+            <div class="grid-cell"><input class="form-control" @bind="EditDiscription" /></div>
         }
         else
         {
@@ -134,40 +134,41 @@
 
 
 @code{
-	//-------------------Services and Repositories------------------
+    //-------------------Services and Repositories------------------
     private TodoService TodoService { get; set; } = default!;
     private List<TodoItem> TodoList =new();
-    private TodoIRepository todoIRepository { get; set; } = default;
-	
-	
 
-	//-------------------Parameter-------------------
+
+
+    //-------------------Parameter-------------------
 
     private string newTitle = "" ;
     private string newDiscription = "";
-    
+
     public string EditTitle = "";
-    private string editDescription = "";
-    
+    private string EditDiscription = "";
+
     private int editId;
-	
-    
-	//----------------------OnInitializedAsync-------------------
+
+
+    //----------------------OnInitializedAsync-------------------
     protected override async Task OnInitializedAsync()
     {
-		TodoService service = new TodoService( IReposetory);
-		TodoList = await TodoService.GetAllTodoItems();
-		editId = 0; // Initialisieren der editId
-		newTitle = String.Empty;
-		newDiscription = String.Empty;
-		EditTitle = String.Empty;
-		editDescription = String.Empty;
-        
+
+        TodoService service = new TodoService( IReposetory);
+        TodoService = service;
+        TodoList = await TodoService.GetAllTodoItems();
+        editId = 0; // Initialisieren der editId
+        newTitle = String.Empty;
+        newDiscription = String.Empty;
+        EditTitle = String.Empty;
+        EditDiscription = String.Empty;
+
 
     }
-	
 
-	//-----------------------------Add----------------------------
+
+    //-----------------------------Add----------------------------
     private async void Add()
     {
         if (string.IsNullOrWhiteSpace(newTitle) || string.IsNullOrWhiteSpace(newDiscription))
@@ -184,43 +185,48 @@
 
         newTitle = String.Empty;
         newDiscription = String.Empty;
+        await TodoService.GetAllTodoItems().ContinueWith(t => TodoList = t.Result);
         StateHasChanged();
-
     }
 
 
-	//------------------------------Edit----------------------------
+    //------------------------------Edit----------------------------
 
     private async void StartEdit(TodoItem item)
-                {
-                await TodoService.StartEdit(item, EditTitle, editDescription);
-                }
+    {
+        editId = item.Id;
+        EditTitle = item.Titel;
+        EditDiscription = item.Discription;
+        TodoService.StartEdit(item, EditTitle, EditDiscription);
+    }
 
-                private void CancelEdit()
-                {
-                    editId = 0;
-                    StateHasChanged();
-                    return;
-                }
+    private void CancelEdit()
+    {
+        editId = 0;
+		EditTitle = String.Empty;
+        EditDiscription = String.Empty;
+        StateHasChanged();
+        return;
+    }
 
-                private async void SaveEdit(TodoItem item)
-                {
-                    editId = 0; 
-        await TodoService.SaveEdit(item, EditTitle, editDescription);
-                }
-	
+    private async void SaveEdit(TodoItem item)
+    {
+        editId = 0; 
+        await TodoService.SaveEdit(item, EditTitle, EditDiscription);
+    }
 
-	//-----------------------------Remove------------------------------
+
+    //-----------------------------Remove------------------------------
     private async void RemoveTodo(TodoItem item) 
 
     {
         await TodoService.DeleteTodoItem(item);
+        await TodoService.GetAllTodoItems().ContinueWith(t => TodoList = t.Result);
         StateHasChanged();
-
     }
-	
-    
-	//-------------------Mark as Done & Remove Mark As Done-------------
+
+
+    //-------------------Mark as Done & Remove Mark As Done-------------
     private async void MarkAsDone(TodoItem item)
     {
         await TodoService.MarkAsComplete(item);
@@ -235,8 +241,10 @@
         await TodoService.RemoveMarkAsComplete(item);
         StateHasChanged();
     }
-	
-
-}
+    //------------------Edit------------------------------------------
+    
+   
+    
+    }        
 
 

@@ -9,10 +9,10 @@ using TodoServiceNamespace;
 namespace InterfaceIRepository
 {
     public interface IRepository
-        
+
     {
         
-        public  Task<List<TodoItem >> Get();
+        public  Task<List<TodoItem>> Get();
         //auf int geändert
         public Task<TodoItem> Get(int id);
 

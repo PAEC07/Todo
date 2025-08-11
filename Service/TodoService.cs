@@ -25,24 +25,29 @@ namespace TodoServiceNamespace
 
         //-----------------------Edit----------------------------
         int editid = -1;
-        public async Task StartEdit(TodoItem item,String editTitle,String editDescription)
+        public void StartEdit(TodoItem item, String editTitle, String editDescription)
         {
             if (item == null || item.Titel == null || item.Discription == null)
             {
                 return;
             }
-            
+
             editid = item.Id;
             editTitle = item.Titel;
             editDescription = item.Discription;
 
         }
-       
+
         public async Task SaveEdit(TodoItem item,String editTitle,String editDescription)
         {
         item.Titel = editTitle;
         item.Discription = editDescription;
+            await _repo.Update(item);
         }
+
+        
+
+
 
 
         //-------------------------Mark as Complete & Remove----------------------------
@@ -73,12 +78,10 @@ namespace TodoServiceNamespace
         //-----------------------Delete----------------------------
         public async Task DeleteTodoItem(TodoItem item)
         {
-            if (item != null)
-            {
+           
                 await _repo.Delete(item);
 
-            }
-    
+              
         }
     }
 }
