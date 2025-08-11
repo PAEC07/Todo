@@ -21,7 +21,10 @@
 <div class="mb-2">
     <input type="text" class="form-control mb-1" @bind="newTitle" placeholder="Neues TODO Titel" />
     <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
+    <input type="datetime-local" class="form-control mb-1"  placeholder="Abegbeterin" />
+    
     <button class="btn btn-primary mb-2" @onclick="Add">Hinzufügen</button>
+
 
     <br />
     <button class="btn btn-warning mb-2" @onclick="() => TodoList = TodoList.OrderBy(t => t.Titel).ToList()" >Sortieren nach Titel</button>
@@ -38,6 +41,8 @@
     <div class="grid-cell">Beschreibung</div>
     <div class="grid-cell">Status</div>
     <div class="grid-cell">Aktionen</div>
+    <div class="grid-cell">Erstellt am</div>
+    <div class="grid-cell">Endet am</div>
 
 </div>
 
@@ -69,6 +74,8 @@
             }
         </div>
 
+		<div class="grid-cell">@todoItem.ErstelltAm.ToString("dd.MM.yyyy HH:mm")</div>
+
         <div class="grid-cell">
             @if (editId == todoItem.Id)
             {
@@ -77,6 +84,7 @@
             }
             else
             { 
+           
                 if(todoItem.Erledigt == false)
                 {
 
@@ -100,7 +108,7 @@
 <style>
     .grid-container {
     display: grid;
-    grid-template-columns: 40px 150px 200px 100px 280px;
+    grid-template-columns: 50px 150px 115px 150px 300px 200px 200px;
     align-items: center;
     gap: 10px;
     margin-bottom: 7px;

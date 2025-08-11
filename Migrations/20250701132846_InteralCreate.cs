@@ -23,6 +23,8 @@ namespace Todo.Migrations
                     Titel = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Discription = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Erledigt = table.Column<bool>(type: "bit", nullable: false),
+                    ErstelltAm = table.Column<DateOnly>(type: "date", nullable: false),
+                    Abgabe = table.Column<DateOnly>(type: "date", nullable: true),
                     User = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>

@@ -21,7 +21,8 @@ namespace InterfaceIRepository
         public Task Update(TodoItem todoItem);
 
         public Task Delete(TodoItem todoItem);
-        Task MarkAsComplete(TodoItem id);
+        
+        
     }
 }
  
