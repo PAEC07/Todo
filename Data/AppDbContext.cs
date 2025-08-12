@@ -6,8 +6,9 @@ namespace Todo.Data
 {
     public class ApplicationDbContext : DbContext
     {
-        public required DbSet<TodoItem> TodoItems { get; set; } 
-        
+        public required DbSet<TodoItem> TodoItems { get; set; }
+        public  DbSet<Category> Categorys { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options) { 
         

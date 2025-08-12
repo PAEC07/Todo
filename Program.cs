@@ -2,8 +2,8 @@
 using Todo.Components;
 using TodoServiceNamespace;
 using Todo.Data;
-using Repository;
-using InterfaceIRepository;
+using Todo.Repositories.Todos;
+using Todo.Repositories.Todos;
 
 
 
@@ -13,6 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

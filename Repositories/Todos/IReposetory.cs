@@ -1,15 +1,13 @@
 ﻿using Todo.Data;
 using Todo.Models;
 using Microsoft.EntityFrameworkCore;
-using InterfaceIRepository;
-using System.Net.Security;
-using Microsoft.EntityFrameworkCore.Internal;
 
 
 
-namespace Repository
+
+namespace Todo.Repositories.Todos
 {
-    public class TodoIRepository : IRepository
+    public class TodoIRepository : InterfaceTodoIRepository
     {
         private readonly ApplicationDbContext _DbContext;
         public TodoIRepository(ApplicationDbContext DbContext) {

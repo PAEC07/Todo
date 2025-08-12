@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Repository;
 using Todo.Models;
-
 using TodoServiceNamespace;
 
-namespace InterfaceIRepository
+namespace Todo.Repositories.Todos
 {
-    public interface IRepository
+    public interface InterfaceTodoIRepository
 
     {
         

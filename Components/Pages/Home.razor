@@ -1,10 +1,11 @@
 ﻿@page "/"
-@using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.EntityFrameworkCore
+@using Repository
 @using Todo
 @using Todo.Data
 @using Todo.Models
-@using Repository
+@using Todo.Repositories.Todos
 @using TodoServiceNamespace
 
 
@@ -16,11 +17,20 @@
 
 @rendermode InteractiveServer
 
-<h3>TODOs</h3> 
+
 
 <div class="mb-2">
+    <GridColums>
+	<h4>Neues TODO hinzufügen</h4>
     <input type="text" class="form-control mb-1" @bind="newTitle" placeholder="Neues TODO Titel" />
     <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
+    <select >
+    <option value="Option1">Option 1</option>
+    <option value="Option2">Option 2</option>
+    <option value="Option3">Option 3</option>
+    </select>
+    </GridColums> 
+
     
     
     <button class="btn btn-primary mb-2" @onclick="Add">Hinzufügen</button>
@@ -104,6 +114,8 @@
 
 
 
+
+
 <style>
     .grid-container {
     display: grid;
@@ -127,6 +139,15 @@
     .grid-cell {
     overflow: hidden;
     }
+
+		.grid-cell input {
+			width: 100%;
+			padding: 4px;
+		}
+
+
+
+
 
     .form-control {
     width: 100%;

@@ -1,11 +1,11 @@
 ﻿using Todo.Models;
-using InterfaceIRepository;
-using Repository;
+using Todo.Repositories.Todos;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore;
 using Todo.Data;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Identity.Client;
+using Todo.Repositories.Todos;
 
 namespace TodoServiceNamespace
 {
