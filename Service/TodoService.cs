@@ -1,24 +1,90 @@
-﻿using System;
-using Todo.Models;
+﻿using Todo.Models;
 using InterfaceIRepository;
-namespace Todo.TodoService
+using Repository;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore;
+using Todo.Data;
+using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.Identity.Client;
+
+namespace TodoServiceNamespace
 {
     public class TodoService
     {
-        private readonly IRepository _todoreposetory;
+        private TodoIRepository _repo;
 
-        public TodoService(IRepository todoreposetory)
+        public TodoService(TodoIRepository todoreposetory)
         {
-            _todoreposetory = todoreposetory;
+            _repo = todoreposetory;
+        }
+        //-----------------------Add----------------------------    
+        public async Task AddTodoItem(TodoItem item)
+        {
+           await _repo.Add(item);
         }
 
-        public void AddTodoItem(TodoItem item)
+        //-----------------------Edit----------------------------
+        int editid = -1;
+        public void StartEdit(TodoItem item, String editTitle, String editDescription)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            _todoreposetory.Add(item);
+            if (item == null || item.Titel == null || item.Discription == null)
+            {
+                return;
+            }
+
+            editid = item.Id;
+            editTitle = item.Titel;
+            editDescription = item.Discription;
+
+        }
+
+        public async Task SaveEdit(TodoItem item,String editTitle,String editDescription)
+        {
+        item.Titel = editTitle;
+        item.Discription = editDescription;
+            await _repo.Update(item);
+        }
+
+        
+
+
+
+
+        //-------------------------Mark as Complete & Remove----------------------------
+
+        public async Task MarkAsComplete(TodoItem item)
+        {
+                    item.Erledigt = true;
+                    await _repo.Update(item);
+        }
+
+        public async Task RemoveMarkAsComplete(TodoItem item)
+        {
+                    item.Erledigt = false;
+                    await _repo.Update(item);
+        }
+
+        //-----------------------Update----------------------------
+        public async Task<TodoItem> GetTodoItem(int id)
+        {
+            return await _repo.Get(id);
+        }
+
+        public async Task<List<TodoItem>> GetAllTodoItems()
+        {
+            return await _repo.Get();
+        }
+
+        //-----------------------Delete----------------------------
+        public async Task DeleteTodoItem(TodoItem item)
+        {
+           
+                await _repo.Delete(item);
+
+              
         }
     }
 }
 
-
-//https://www.youtube.com/watch?v=rsfYoA4LsS8&t=205s
+                    //context.TodoItems.Update(item);
+                    //await context.SaveChangesAsync();

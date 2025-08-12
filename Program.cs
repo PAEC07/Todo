@@ -1,40 +1,39 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Todo;
 using Todo.Components;
-using Todo.Models;
-using InterfaceIRepository;
+using TodoServiceNamespace;
 using Todo.Data;
 using Repository;
-using Nest;
+using InterfaceIRepository;
+
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped < IRepository, TodoIRepository>();
-
-
-
-
+builder.Services.AddScoped <TodoIRepository>();
+builder.Services.AddScoped<TodoService>();
 
 
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
+
 
 
 app.UseAntiforgery();
@@ -44,3 +43,6 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 
 app.Run();
+
+
+

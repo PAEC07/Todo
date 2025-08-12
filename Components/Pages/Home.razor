@@ -1,26 +1,30 @@
 ﻿@page "/"
 @using Microsoft.EntityFrameworkCore
-
+@using Microsoft.AspNetCore.Components.Web
 @using Todo
 @using Todo.Data
 @using Todo.Models
-@using Todo.Data
-@using Todo.Models
 @using Repository
-@using Todo.TodoService;
+@using TodoServiceNamespace
+
+
 
 
 @inject ApplicationDbContext DbContext
 @inject TodoIRepository IReposetory
+@inject TodoService todoService
 
 @rendermode InteractiveServer
 
-<h3>TODOs</h3>
+<h3>TODOs</h3> 
 
 <div class="mb-2">
     <input type="text" class="form-control mb-1" @bind="newTitle" placeholder="Neues TODO Titel" />
     <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
+    <input type="datetime-local" class="form-control mb-1"  placeholder="Abegbeterin" />
+    
     <button class="btn btn-primary mb-2" @onclick="Add">Hinzufügen</button>
+
 
     <br />
     <button class="btn btn-warning mb-2" @onclick="() => TodoList = TodoList.OrderBy(t => t.Titel).ToList()" >Sortieren nach Titel</button>
@@ -37,6 +41,8 @@
     <div class="grid-cell">Beschreibung</div>
     <div class="grid-cell">Status</div>
     <div class="grid-cell">Aktionen</div>
+    <div class="grid-cell">Erstellt am</div>
+    <div class="grid-cell">Endet am</div>
 
 </div>
 
@@ -48,8 +54,8 @@
 
         @if (editId == todoItem.Id)
         {
-            <div class="grid-cell"><input class="form-control" @bind="editTitle" /></div>
-            <div class="grid-cell"><input class="form-control" @bind="editDescription" /></div>
+            <div class="grid-cell"><input class="form-control" @bind="EditTitle" /></div>
+            <div class="grid-cell"><input class="form-control" @bind="EditDiscription" /></div>
         }
         else
         {
@@ -68,6 +74,8 @@
             }
         </div>
 
+		<div class="grid-cell">@todoItem.ErstelltAm.ToString("dd.MM.yyyy HH:mm")</div>
+
         <div class="grid-cell">
             @if (editId == todoItem.Id)
             {
@@ -76,6 +84,7 @@
             }
             else
             { 
+           
                 if(todoItem.Erledigt == false)
                 {
 
@@ -99,7 +108,7 @@
 <style>
     .grid-container {
     display: grid;
-    grid-template-columns: 40px 150px 200px 100px 280px;
+    grid-template-columns: 50px 150px 115px 150px 300px 200px 200px;
     align-items: center;
     gap: 10px;
     margin-bottom: 7px;
@@ -129,104 +138,121 @@
 
 
 
-var todorepository = new TodoReposetory();
-var TodoService = new TodoService(todorepository);
 
 
 
 @code{
-    private TodoService TodoService { get; set; }
-    private List<TodoItem> TodoList = new();
-    
-   
-   
+    //-------------------Services and Repositories------------------
+    private TodoService TodoService { get; set; } = default!;
+    private List<TodoItem> TodoList =new();
 
-    private string newTitle;
-    private string newDiscription;
-    //
-    private string editTitle;
-    private string editDescription;
-    //
+
+
+    //-------------------Parameter-------------------
+
+    private string newTitle = "" ;
+    private string newDiscription = "";
+
+    public string EditTitle = "";
+    private string EditDiscription = "";
+
     private int editId;
-   
-    
 
+
+    //----------------------OnInitializedAsync-------------------
+    protected override async Task OnInitializedAsync()
+    {
+
+        TodoService service = new TodoService( IReposetory);
+        TodoService = service;
+        TodoList = await TodoService.GetAllTodoItems();
+        editId = 0; // Initialisieren der editId
+        newTitle = String.Empty;
+        newDiscription = String.Empty;
+        EditTitle = String.Empty;
+        EditDiscription = String.Empty;
+
+
+    }
+
+
+    //-----------------------------Add----------------------------
     private async void Add()
     {
-		if (string.IsNullOrWhiteSpace(newTitle) || string.IsNullOrWhiteSpace(newDiscription))
-		{
-			return; // Eingabe überprüfen
-		}
+        if (string.IsNullOrWhiteSpace(newTitle) || string.IsNullOrWhiteSpace(newDiscription))
+        {
+            return; // Eingabe überprüfen
+        }
         var newTodo = new TodoItem
             {
                 Titel = newTitle,
                 Discription = newDiscription
             };
-        TodoService.AddTodoItem(newTodo);
+
+        await TodoService.AddTodoItem(newTodo);
+
         newTitle = String.Empty;
         newDiscription = String.Empty;
+        await TodoService.GetAllTodoItems().ContinueWith(t => TodoList = t.Result);
         StateHasChanged();
     }
 
-    private void StartEdit(TodoItem item)
-    {
-        if (item == null || item.Titel == null || item.Discription == null)
-        {
-            return;
-        }
-        editId = item.Id;
-        editTitle = item.Titel;
-        editDescription = item.Discription;
 
+    //------------------------------Edit----------------------------
+
+    private async void StartEdit(TodoItem item)
+    {
+        editId = item.Id;
+        EditTitle = item.Titel;
+        EditDiscription = item.Discription;
+        TodoService.StartEdit(item, EditTitle, EditDiscription);
     }
 
     private void CancelEdit()
     {
         editId = 0;
+		EditTitle = String.Empty;
+        EditDiscription = String.Empty;
         StateHasChanged();
-           
-        }
+        return;
+    }
 
     private async void SaveEdit(TodoItem item)
     {
-        item.Titel = editTitle;
-        item.Discription = editDescription;
-        await DbContext.SaveChangesAsync();
         editId = 0; 
-        TodoList = await DbContext.TodoItems.ToListAsync();
+        await TodoService.SaveEdit(item, EditTitle, EditDiscription);
+    }
+
+
+    //-----------------------------Remove------------------------------
+    private async void RemoveTodo(TodoItem item) 
+
+    {
+        await TodoService.DeleteTodoItem(item);
+        await TodoService.GetAllTodoItems().ContinueWith(t => TodoList = t.Result);
         StateHasChanged();
     }
 
-        private async void RemoveTodo(TodoItem item) 
 
-        {
-            DbContext.TodoItems.RemoveRange(DbContext.TodoItems.Where(i => i.Id == item.Id));    
-            await DbContext.SaveChangesAsync();
-            TodoList = await DbContext.TodoItems.ToListAsync();
-            StateHasChanged();
-        }
-
-        private async void MarkAsDone(TodoItem item)
-        {
-            item.Erledigt = true;
-            await DbContext.SaveChangesAsync();
-            TodoList = await DbContext.TodoItems.ToListAsync();
-            StateHasChanged();
-        
-        
-        }
-        
-         private async void RemoveMarkAsDone(TodoItem item)
-        {
-            item.Erledigt = false;
-            await DbContext.SaveChangesAsync();
-            TodoList = await DbContext.TodoItems.ToListAsync();
-            StateHasChanged();
-        
-        
-        }
+    //-------------------Mark as Done & Remove Mark As Done-------------
+    private async void MarkAsDone(TodoItem item)
+    {
+        await TodoService.MarkAsComplete(item);
+        StateHasChanged();
 
 
-}
+
+    }
+
+    private async void RemoveMarkAsDone(TodoItem item)
+    {
+        await TodoService.RemoveMarkAsComplete(item);
+        StateHasChanged();
+    }
+    //------------------Edit------------------------------------------
+    
+   
+    
+    }        
 
 
