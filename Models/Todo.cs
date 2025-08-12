@@ -19,8 +19,7 @@ namespace Todo.Models
             Titel = Titel1;
             Discription = Discription1;
             Erledigt = Erledigt1;
-            ErstelltAm = DateOnly.FromDateTime(DateTime.Now);
-           // Abgabe = null;
+           
             }
         
         
@@ -32,8 +31,6 @@ namespace Todo.Models
 
         public bool Erledigt { get; set; }
 
-        public DateOnly ErstelltAm{ get; set; }
-
-        public DateOnly? Abgabe { get; set; } = null;
+       
     }
 }
