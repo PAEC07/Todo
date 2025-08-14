@@ -1,47 +1,49 @@
 ﻿@page "/"
-@using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.Web
+@using Microsoft.EntityFrameworkCore
+@using Repository
 @using Todo
+@using Todo.Auslesen_des_Nutzers
 @using Todo.Data
 @using Todo.Models
-@using Repository
-@using TodoServiceNamespace
-
-
-
+@using Todo.Repositories.Todo
+@using Todo.Service.ServiceTodo
+@using Todo.Service.ServiceTodo
 
 @inject ApplicationDbContext DbContext
 @inject TodoIRepository IReposetory
 @inject TodoService todoService
 
+
+
 @rendermode InteractiveServer
 
-<h3>TODOs</h3> 
+<h3>TODOs</h3>
 
 <div class="mb-2">
     <input type="text" class="form-control mb-1" @bind="newTitle" placeholder="Neues TODO Titel" />
     <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
-    
-    
+
+
     <button class="btn btn-primary mb-2" @onclick="Add">Hinzufügen</button>
 
 
     <br />
-    <button class="btn btn-warning mb-2" @onclick="() => TodoList = TodoList.OrderBy(t => t.Titel).ToList()" >Sortieren nach Titel</button>
-    <butten class="btn btn-warning mb-2" @onclick="() => TodoList = TodoList.OrderBy(i => i.Id).ToList()">Sortiren nach ID</butten>
-    <butten class="btn btn-warning mb-2" @onclick="() => TodoList = TodoList.OrderBy(i => i.Erledigt).ToList()">Sortiren Status</butten>
 </div>
 
+-->
 
 <br />
 
 <div class="grid-container grid-header">
-    <div class="grid-cell">ID</div>
-    <div class="grid-cell">Titel</div>
+    <div class="grid-cell">
+        <butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.Id).ToList()">ID</butten>
+    </div>
+    <div class="grid-cell"><button class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(t => t.Titel).ToList()"> Titel</button></div>
     <div class="grid-cell">Beschreibung</div>
-    <div class="grid-cell">Status</div>
+    <div class="grid-cell"><butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.Erledigt).ToList()">Sortiren Status</butten></div>
     <div class="grid-cell">Aktionen</div>
-   
+
 
 </div>
 
@@ -73,7 +75,7 @@
             }
         </div>
 
-		
+
 
         <div class="grid-cell">
             @if (editId == todoItem.Id)
@@ -82,15 +84,15 @@
                 <button class="btn btn-secondary btn-sm" @onclick="CancelEdit">Zurück</button>
             }
             else
-            { 
-           
-                if(todoItem.Erledigt == false)
+            {
+
+                if (todoItem.Erledigt == false)
                 {
 
                     <button class="btn btn-success btn-sm me-1" @onclick="() => MarkAsDone(todoItem)">Erledigen</button>
                 }
-                else if(todoItem.Erledigt == true)
-                {   
+                else if (todoItem.Erledigt == true)
+                {
                     <button class="btn btn-danger btn-sm me-1" @onclick="() => RemoveMarkAsDone(todoItem)">Zurücksetzten</button>
                 }
 
@@ -106,31 +108,31 @@
 
 <style>
     .grid-container {
-    display: grid;
-    grid-template-columns: 50px 150px 115px 150px 300px 200px 200px;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 7px;
+        display: grid;
+        grid-template-columns: 50px 150px 115px 150px 300px 200px 200px;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 7px;
     }
 
     .grid-header {
-    font-weight: bold;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 10px;
+        font-weight: bold;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 10px;
     }
 
     .grid-row {
-    padding: 5px 0;
-    border-bottom: 1px solid #eee;
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
     }
 
     .grid-cell {
-    overflow: hidden;
+        overflow: hidden;
     }
 
     .form-control {
-    width: 100%;
-    padding: 4px;
+        width: 100%;
+        padding: 4px;
     }
 </style>
 
@@ -140,16 +142,16 @@
 
 
 
-@code{
+@code {
     //-------------------Services and Repositories------------------
     private TodoService TodoService { get; set; } = default!;
-    private List<TodoItem> TodoList =new();
+    private List<TodoItem> TodoList = new();
 
 
 
     //-------------------Parameter-------------------
 
-    private string newTitle = "" ;
+    private string newTitle = "";
     private string newDiscription = "";
 
     public string EditTitle = "";
@@ -162,7 +164,7 @@
     protected override async Task OnInitializedAsync()
     {
 
-        TodoService service = new TodoService( IReposetory);
+        TodoService service = new TodoService(IReposetory);
         TodoService = service;
         TodoList = await TodoService.GetAllTodoItems();
         editId = 0; // Initialisieren der editId
@@ -210,7 +212,7 @@
     private void CancelEdit()
     {
         editId = 0;
-		EditTitle = String.Empty;
+        EditTitle = String.Empty;
         EditDiscription = String.Empty;
         StateHasChanged();
         return;
@@ -218,13 +220,13 @@
 
     private async void SaveEdit(TodoItem item)
     {
-        editId = 0; 
+        editId = 0;
         await TodoService.SaveEdit(item, EditTitle, EditDiscription);
     }
 
 
     //-----------------------------Remove------------------------------
-    private async void RemoveTodo(TodoItem item) 
+    private async void RemoveTodo(TodoItem item)
 
     {
         await TodoService.DeleteTodoItem(item);
@@ -249,9 +251,5 @@
         StateHasChanged();
     }
     //------------------Edit------------------------------------------
-    
-   
-    
-    }        
-
+}
 

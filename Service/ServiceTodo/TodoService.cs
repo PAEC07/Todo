@@ -1,17 +1,13 @@
 ﻿using Todo.Models;
-using InterfaceIRepository;
-using Repository;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore;
-using Todo.Data;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.Identity.Client;
+using Todo.Repositories.Todo;
 
-namespace TodoServiceNamespace
+namespace Todo.Service.ServiceTodo
 {
     public class TodoService
     {
         private TodoIRepository _repo;
+
+
 
         public TodoService(TodoIRepository todoreposetory)
         {
@@ -20,12 +16,12 @@ namespace TodoServiceNamespace
         //-----------------------Add----------------------------    
         public async Task AddTodoItem(TodoItem item)
         {
-           await _repo.Add(item);
+            await _repo.Add(item);
         }
 
         //-----------------------Edit----------------------------
         int editid = -1;
-        public void StartEdit(TodoItem item, String editTitle, String editDescription)
+        public void StartEdit(TodoItem item, string editTitle, string editDescription)
         {
             if (item == null || item.Titel == null || item.Discription == null)
             {
@@ -38,14 +34,14 @@ namespace TodoServiceNamespace
 
         }
 
-        public async Task SaveEdit(TodoItem item,String editTitle,String editDescription)
+        public async Task SaveEdit(TodoItem item, string editTitle, string editDescription)
         {
-        item.Titel = editTitle;
-        item.Discription = editDescription;
+            item.Titel = editTitle;
+            item.Discription = editDescription;
             await _repo.Update(item);
         }
 
-        
+
 
 
 
@@ -54,14 +50,14 @@ namespace TodoServiceNamespace
 
         public async Task MarkAsComplete(TodoItem item)
         {
-                    item.Erledigt = true;
-                    await _repo.Update(item);
+            item.Erledigt = true;
+            await _repo.Update(item);
         }
 
         public async Task RemoveMarkAsComplete(TodoItem item)
         {
-                    item.Erledigt = false;
-                    await _repo.Update(item);
+            item.Erledigt = false;
+            await _repo.Update(item);
         }
 
         //-----------------------Update----------------------------
@@ -78,10 +74,17 @@ namespace TodoServiceNamespace
         //-----------------------Delete----------------------------
         public async Task DeleteTodoItem(TodoItem item)
         {
-           
-                await _repo.Delete(item);
 
-              
+            await _repo.Delete(item);
+
+
+        }
+
+        public async Task UpdateCategory(TodoItem item)
+        {
+
+            await _repo.Update(item);
+
         }
     }
 }

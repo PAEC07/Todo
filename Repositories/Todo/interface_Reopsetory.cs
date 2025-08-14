@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Repository;
 using Todo.Models;
+using Todo.Service.ServiceTodo;
 
-using TodoServiceNamespace;
-
-namespace InterfaceIRepository
+namespace Todo.Repositories.Todo
 {
     public interface IRepository
 

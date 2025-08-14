@@ -1,11 +1,12 @@
-﻿using BlazorApp1.Auslesen_des_Nutzers;
+﻿
 using Microsoft.Identity.Client;
 
 namespace Todo.Models
 {
     public class TodoItem
     {
-        public TodoItem(int Id1, string Titel1, string Discription1, bool Erledigt1)
+        
+        public TodoItem(int Id1, string Titel1, string Discription1, bool Erledigt1, int ID)
         {
             if (Titel1 == null || Discription1 == null)
             {
@@ -19,8 +20,9 @@ namespace Todo.Models
             Titel = Titel1;
             Discription = Discription1;
             Erledigt = Erledigt1;
-           
-            }
+            CategoryId = ID;
+
+        }
         
         
 
@@ -31,6 +33,8 @@ namespace Todo.Models
 
         public bool Erledigt { get; set; }
 
-       
+        public int CategoryId { get; set; } 
+
+
     }
 }

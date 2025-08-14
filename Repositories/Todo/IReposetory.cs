@@ -1,13 +1,12 @@
 ﻿using Todo.Data;
 using Todo.Models;
 using Microsoft.EntityFrameworkCore;
-using InterfaceIRepository;
 using System.Net.Security;
 using Microsoft.EntityFrameworkCore.Internal;
 
 
 
-namespace Repository
+namespace Todo.Repositories.Todo
 {
     public class TodoIRepository : IRepository
     {
@@ -49,17 +48,17 @@ namespace Repository
         {
             
             {
-                return await _DbContext.TodoItems.ToListAsync();// Hier wird eine Leere liste übergeben 
-               
-            }
+                 return await _DbContext.TodoItems.ToListAsync();// Hier wird eine Leere liste übergeben 
+                
 
         }
+    }
     
         public async Task<TodoItem> Get(int id)
         {
           
             
-                return await _DbContext.TodoItems.FindAsync(id) ?? new TodoItem(-1, "Fehler", "Fehler", false);
+                return await _DbContext.TodoItems.FindAsync(id) ?? new TodoItem(-1, "Fehler", "Fehler", false,-1);
             
         }
 

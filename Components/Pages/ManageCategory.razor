@@ -1,0 +1,94 @@
+﻿@page "/AddCategorys"
+@using Todo.Repositories.Todo
+@using Todo.Service.ServiceTodo
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@code {
+
+
+
+
+
+
+
+    //-------------------Services and Repositories------------------
+    private TodoService TodoService { get; set; } = default!;
+
+
+
+
+    //-------------------Parameter-------------------
+    private string newTitle = "";
+    private string newDiscription = "";
+
+
+
+
+
+    //----------------------OnInitializedAsync-------------------
+    protected override async Task OnInitializedAsync()
+    {
+
+       
+
+
+
+
+
+    }
+
+
+    //-----------------------------Add----------------------------
+
+    private async void Add()
+    {
+
+        var newTodo = new TodoItem
+            {
+                Titel = newTitle,
+                Discription = newDiscription
+            };
+
+        await TodoService.AddTodoItem(newTodo);
+
+
+        newTitle = String.Empty;
+        newDiscription = String.Empty;
+       
+        StateHasChanged();
+    }
+
+
+}
+
+

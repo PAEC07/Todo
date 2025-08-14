@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Todo.Components;
-using TodoServiceNamespace;
 using Todo.Data;
-using Repository;
-using InterfaceIRepository;
+using Todo.Repositories.Todo;
+using Todo.Service.ServiceTodo;
+
 
 
 
