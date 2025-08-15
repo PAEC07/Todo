@@ -15,7 +15,7 @@ namespace Todo.Repositories.Todo
             _DbContext = DbContext; 
         }
 
-        
+       
 
         public async Task Add(TodoItem item)
         {
@@ -58,7 +58,7 @@ namespace Todo.Repositories.Todo
         {
           
             
-                return await _DbContext.TodoItems.FindAsync(id) ?? new TodoItem(-1, "Fehler", "Fehler", false,-1);
+                return await _DbContext.TodoItems.FindAsync(id) ?? new TodoItem(-1, "Fehler", "Fehler", false, "Fehler");
             
         }
 

@@ -7,14 +7,18 @@ namespace Todo.Models
         public int id { get; set; } 
         public string name { get; set; }
         
-        public int CategoryID { get; set; }
+        
+        
+
         public CategoryItem(int Id, String Name, int ID)
         {
             id = Id;
             name = Name;
-            CategoryID = ID;
+            
+           
         }
-        
+
+        public CategoryItem() { } // Default constructor for EF Core
     }
 
 }

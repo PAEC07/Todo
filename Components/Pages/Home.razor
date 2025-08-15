@@ -25,13 +25,42 @@
     <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
 
 
-    <button class="btn btn-primary mb-2" @onclick="Add">Hinzufügen</button>
+    <button class="btn btn-dark" @onclick="Add">Hinzufügen</button>
 
+    
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" @onclick="ToggleDropdown">
+            @SelectedOption
+        </button>
+        <ul class="dropdown-menu" style="display: @(isDropdownOpen ? "block" : "none");">
+            @foreach (var option in Options)
+            {
+                <li><a class="dropdown-item" href="#" @onclick="() => SelectOption(option)">@option</a></li>
+            }
+        </ul>
+    </div>
+
+    @code {
+        private bool isDropdownOpen = false;
+        private string SelectedOption = "Select an Option";
+        private List<string> Options = new() { "Option 1", "Option 2", "Option 3" };
+
+        private void ToggleDropdown()
+        {
+            isDropdownOpen = !isDropdownOpen;
+        }
+
+        private void SelectOption(string option)
+        {
+            SelectedOption = option;
+            isDropdownOpen = false;
+        }
+    }
 
     <br />
 </div>
 
--->
+
 
 <br />
 

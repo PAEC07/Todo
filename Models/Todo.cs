@@ -6,7 +6,7 @@ namespace Todo.Models
     public class TodoItem
     {
         
-        public TodoItem(int Id1, string Titel1, string Discription1, bool Erledigt1, int ID)
+        public TodoItem(int Id1, string Titel1, string Discription1, bool Erledigt1, String CategoryName01)
         {
             if (Titel1 == null || Discription1 == null)
             {
@@ -20,7 +20,7 @@ namespace Todo.Models
             Titel = Titel1;
             Discription = Discription1;
             Erledigt = Erledigt1;
-            CategoryId = ID;
+            CategoryName = CategoryName01;
 
         }
         
@@ -33,7 +33,7 @@ namespace Todo.Models
 
         public bool Erledigt { get; set; }
 
-        public int CategoryId { get; set; } 
+        public string CategoryName { get; set; } 
 
 
     }

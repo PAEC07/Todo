@@ -1,8 +1,9 @@
 ﻿using Repository;
 using Todo.Models;
 using Todo.Repositories.Todo;
-using Todo.Repositories.Category;
+
 using Todo.Service.ServiceTodo;
+using Todo.Repositories.CategoryNamespace;
 
 
 
@@ -10,31 +11,32 @@ namespace Todo.Service
 {
     public class ServiceCategory
     {
-        private CategoryIRepository _repo01;
-        public ServiceCategory(CategoryIRepository repositoryCategory)
+        readonly CategoryRepository _repo;
+
+      
+        public ServiceCategory(CategoryRepository item)
         {
-            _repo01 = repositoryCategory;
+            _repo = item;
         }
 
+        
 
         public async Task AddCategoryItem(CategoryItem item)
         {
-           // await _repo01.Add(item);
-        }public async Task Remove(CategoryItem item)
+            await _repo.Add(item);
+        }
+        public async Task Remove(CategoryItem item)
         {
-          //  await _repo01.Add(item);
+            await _repo.Add(item);
         }
 
-        public async Task AddCategoryToTodoItem(CategoryItem item, TodoItem todoItem)
+        public async Task UpdateCategoryItem(CategoryItem item)
         {
-            if (item == null || todoItem == null)
-            {
-                return;
-            }
-            
-            todoItem.CategoryId = item.id;
-            
-        
+            await _repo.Update(item);
+        }
+        public async Task<List<CategoryItem>> GetCategoryItems()
+        {
+            return await _repo.Get();
         }
     }
 }

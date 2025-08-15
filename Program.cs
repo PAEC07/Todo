@@ -1,7 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Todo.Components;
 using Todo.Data;
+
+using Todo.Repositories.CategoryNamespace;
 using Todo.Repositories.Todo;
+using Todo.Service;
 using Todo.Service.ServiceTodo;
 
 
@@ -19,6 +22,8 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddScoped <TodoIRepository>();
 builder.Services.AddScoped<TodoService>();
+builder.Services.AddScoped<CategoryRepository>();
+builder.Services.AddScoped<ServiceCategory>();
 
 
 

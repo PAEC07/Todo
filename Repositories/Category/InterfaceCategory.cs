@@ -5,17 +5,17 @@
 
 namespace Todo.Repositories.CategoryNamespace
 {
-    public interface InterfaceCategoryIRepository
+    public interface ICategoryRepository
     {
         public Task<List<CategoryItem>> Get();
-        //auf int geändert
+        
         public Task<CategoryItem> Get(int id);
 
-        public Task Add(CategoryItem option);
+        public Task Add(CategoryItem categoryItem);
 
-        public Task Update(CategoryItem option);
+        internal Task Update(CategoryItem categoryItem);
 
-        public Task Delete(CategoryItem option);
+        internal Task Delete(CategoryItem categoryItem);
 
 
     }

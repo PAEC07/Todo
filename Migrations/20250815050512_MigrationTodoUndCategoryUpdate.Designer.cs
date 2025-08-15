@@ -11,8 +11,8 @@ using Todo.Data;
 namespace Todo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250812120657_AddOptionTable")]
-    partial class AddOptionTable
+    [Migration("20250815050512_MigrationTodoUndCategoryUpdate")]
+    partial class MigrationTodoUndCategoryUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,13 +25,16 @@ namespace Todo.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Todo.Models.Category", b =>
+            modelBuilder.Entity("Todo.Models.CategoryItem", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
 
                     b.Property<string>("name")
                         .IsRequired()
@@ -49,6 +52,10 @@ namespace Todo.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CategoryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discription")
                         .IsRequired()
