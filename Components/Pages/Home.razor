@@ -7,9 +7,12 @@
 @using Todo.Data
 @using Todo.Models
 @using Todo.Repositories.Todo
+@using Todo.Service
 @using Todo.Service.ServiceTodo
 @using Todo.Service.ServiceTodo
 
+@inject NavigationManager NavigationManager
+@inject ServiceCategories ServiceCategories
 @inject ApplicationDbContext DbContext
 @inject TodoIRepository IReposetory
 @inject TodoService todoService
@@ -20,30 +23,32 @@
 
 <h3>TODOs</h3>
 
-<div class="mb-2">
+<div>
     <input type="text" class="form-control mb-1" @bind="newTitle" placeholder="Neues TODO Titel" />
     <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
 
 
-    <button class="btn btn-dark" @onclick="Add">Hinzufügen</button>
-
-    
-    <div class="dropdown">
-        <button class="btn btn-primary dropdown-toggle" @onclick="ToggleDropdown">
+    <div class="dropdown" style="margin-bottom: 10px;">
+        <button class="btn btn-outline-dark dropdown-toggle" @onclick="ToggleDropdown">
             @SelectedOption
         </button>
         <ul class="dropdown-menu" style="display: @(isDropdownOpen ? "block" : "none");">
-            @foreach (var option in Options)
+            @foreach (var option in Categories)
             {
-                <li><a class="dropdown-item" href="#" @onclick="() => SelectOption(option)">@option</a></li>
+                <li><a class="dropdown-item" href="#" @onclick="() => SelectOption(option.name)">@option</a></li>
             }
         </ul>
+        <butten class=" btn btn-outline-dark " @onclick="NavigateToCategoriess">Manage Categoriess</butten>
+        
     </div>
+        <button class="btn btn-dark" @onclick="Add">Hinzufügen</button>
+    
+
+
 
     @code {
         private bool isDropdownOpen = false;
         private string SelectedOption = "Select an Option";
-        private List<string> Options = new() { "Option 1", "Option 2", "Option 3" };
 
         private void ToggleDropdown()
         {
@@ -70,7 +75,11 @@
     </div>
     <div class="grid-cell"><button class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(t => t.Titel).ToList()"> Titel</button></div>
     <div class="grid-cell">Beschreibung</div>
-    <div class="grid-cell"><butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.Erledigt).ToList()">Sortiren Status</butten></div>
+    <div class="grid-cell"><butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.Erledigt).ToList()">Status</butten></div>
+
+
+    <div class="grid-cell"><butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.CategoriesName).ToList()">Categories</butten></div>
+
     <div class="grid-cell">Aktionen</div>
 
 
@@ -104,6 +113,7 @@
             }
         </div>
 
+        <div class="grid-container grid-row">@todoItem.CategoriesName</div>
 
 
         <div class="grid-cell">
@@ -138,7 +148,7 @@
 <style>
     .grid-container {
         display: grid;
-        grid-template-columns: 50px 150px 115px 150px 300px 200px 200px;
+        grid-template-columns: 50px 150px 115px 150px 150px 300px 200px 200px;
         align-items: center;
         gap: 10px;
         margin-bottom: 7px;
@@ -174,7 +184,9 @@
 @code {
     //-------------------Services and Repositories------------------
     private TodoService TodoService { get; set; } = default!;
+    private ServiceCategories serviceCategoriess { get; set; } = default!;
     private List<TodoItem> TodoList = new();
+    private List<CategoriesItem> Categories = new();
 
 
 
@@ -202,7 +214,17 @@
         EditTitle = String.Empty;
         EditDiscription = String.Empty;
 
+        var items = await ServiceCategories.GetCategoriesItems();
 
+
+    }
+
+    //----------------------NavigateToCategories----------------------
+
+    public void NavigateToCategoriess()
+    {
+        
+        NavigationManager.NavigateTo("/ManageCategories");
     }
 
 

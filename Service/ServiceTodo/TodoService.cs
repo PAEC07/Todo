@@ -80,7 +80,7 @@ namespace Todo.Service.ServiceTodo
 
         }
 
-        public async Task UpdateCategory(TodoItem item)
+        public async Task UpdateCategories(TodoItem item)
         {
 
             await _repo.Update(item);

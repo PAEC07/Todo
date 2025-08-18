@@ -3,19 +3,19 @@
 
 
 
-namespace Todo.Repositories.CategoryNamespace
+namespace Todo.Repositories.CategoriesNamespace
 {
-    public interface ICategoryRepository
+    public interface ICategoriesRepository
     {
-        public Task<List<CategoryItem>> Get();
+        public Task<List<CategoriesItem>> Get();
         
-        public Task<CategoryItem> Get(int id);
+        public Task<CategoriesItem> Get(int id);
 
-        public Task Add(CategoryItem categoryItem);
+        public Task Add(CategoriesItem CategoriesItem);
 
-        internal Task Update(CategoryItem categoryItem);
+        internal Task Update(CategoriesItem CategoriesItem);
 
-        internal Task Delete(CategoryItem categoryItem);
+        internal Task Delete(CategoriesItem CategoriesItem);
 
 
     }

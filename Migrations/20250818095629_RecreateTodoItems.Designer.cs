@@ -11,8 +11,8 @@ using Todo.Data;
 namespace Todo.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250815050512_MigrationTodoUndCategoryUpdate")]
-    partial class MigrationTodoUndCategoryUpdate
+    [Migration("20250818095629_RecreateTodoItems")]
+    partial class RecreateTodoItems
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Todo.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Todo.Models.CategoryItem", b =>
+            modelBuilder.Entity("Todo.Models.CategoriesItem", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -33,16 +33,13 @@ namespace Todo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
-                    b.Property<int>("CategoryID")
-                        .HasColumnType("int");
-
                     b.Property<string>("name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("id");
 
-                    b.ToTable("Categorys", "paul");
+                    b.ToTable("CategoriesItems", "paul");
                 });
 
             modelBuilder.Entity("Todo.Models.TodoItem", b =>
@@ -53,19 +50,16 @@ namespace Todo.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CategoryName")
-                        .IsRequired()
+                    b.Property<string>("CategoriesName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Discription")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("Erledigt")
                         .HasColumnType("bit");
 
                     b.Property<string>("Titel")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

@@ -7,7 +7,7 @@ namespace Todo.Data
     public class ApplicationDbContext : DbContext
     {
         public required DbSet<TodoItem> TodoItems { get; set; }
-        public DbSet<CategoryItem> CategoryItems { get; set; }
+        public DbSet<CategoriesItem> CategoriesItems { get; set; }
 
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

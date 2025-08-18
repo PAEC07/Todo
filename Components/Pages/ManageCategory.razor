@@ -1,6 +1,23 @@
-﻿@page "/AddCategorys"
-@using Todo.Repositories.Todo
-@using Todo.Service.ServiceTodo
+﻿@page "/ManageCategories"
+@using Todo.Repositories.CategoriesNamespace
+@using Todo.Repositories
+@using Todo.Service
+
+@inject ServiceCategories ServiceCategories
+@inject CategoriesRepository CategoriesRepository
+
+<h3>Hier können sie ihre Todos bearbeiten </h3>
+<input type="text" class="form-control mb-1" @bind="Name" placeholder="Neue Categories" />
+<button class="btn btn-dark" @onclick="Add">Hinzufügen</button>
+<div class="grid-container grid-header">
+<div class="grid-cell">
+    <butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => CategoriesList = CategoriesList.OrderBy(i => i.id).ToList()">ID</butten>
+</div>
+
+<div class="grid-cell">
+        <butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => CategoriesList = CategoriesList.OrderBy(i => i.name).ToList()">Name</butten>
+</div>
+</div>
 
 
 
@@ -8,27 +25,58 @@
 
 
 
+@foreach (var CategoriesItem in CategoriesList)
+{
+
+
+<div class="grid-container grid-row">
+    <div class="grid-cell">
+    @CategoriesItem.id;
+    </div>
+    
+<div class="grid-container grid-row">
+    @CategoriesItem.name;
+    </div>
+
+</div>    
 
 
 
+}
 
 
 
+<style>
 
+.grid-container {
+    display: grid;
+    grid-template-columns: 50px 150px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 7px;
+    }
 
+    .grid-header {
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+    }
 
+    .grid-row {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+    }
 
+    .grid-cell {
+    overflow: hidden;
+    }
 
+    .form-control {
+    width: 100%;
+    padding: 4px;
+    }
 
-
-
-
-
-
-
-
-
-
+</style>
 
 
 
@@ -41,31 +89,32 @@
 
 
 
+
     //-------------------Services and Repositories------------------
-    private TodoService TodoService { get; set; } = default!;
-
-
+    private ServiceCategories serviceCategoriess { get; set; } = default!;
+    private List<CategoriesItem> CategoriesList = new();
+    
 
 
     //-------------------Parameter-------------------
-    private string newTitle = "";
-    private string newDiscription = "";
-
-
-
-
+    private string Name { get; set; }
 
     //----------------------OnInitializedAsync-------------------
     protected override async Task OnInitializedAsync()
     {
 
-       
+
+        
+
+    CategoriesList = await ServiceCategories.GetCategoriesItems();
 
 
 
 
 
     }
+
+
 
 
     //-----------------------------Add----------------------------
@@ -73,20 +122,22 @@
     private async void Add()
     {
 
-        var newTodo = new TodoItem
+        var newCategories = new CategoriesItem
             {
-                Titel = newTitle,
-                Discription = newDiscription
+                name = Name
             };
 
-        await TodoService.AddTodoItem(newTodo);
+        await ServiceCategories.AddCategoriesItem(newCategories);
 
-
-        newTitle = String.Empty;
-        newDiscription = String.Empty;
+        Name = String.Empty;
        
         StateHasChanged();
+		// Refresh the Categories list after adding a new item
+        CategoriesList = await serviceCategoriess.GetCategoriesItems();
     }
+
+    
+
 
 
 }

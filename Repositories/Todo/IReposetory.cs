@@ -48,7 +48,8 @@ namespace Todo.Repositories.Todo
         {
             
             {
-                 return await _DbContext.TodoItems.ToListAsync();// Hier wird eine Leere liste übergeben 
+                
+                 return await _DbContext.TodoItems.ToListAsync(); 
                 
 
         }
@@ -61,7 +62,7 @@ namespace Todo.Repositories.Todo
                 return await _DbContext.TodoItems.FindAsync(id) ?? new TodoItem(-1, "Fehler", "Fehler", false, "Fehler");
             
         }
-
+        
         public Task MarkAsComplete(TodoItem id)
         {
             throw new NotImplementedException();

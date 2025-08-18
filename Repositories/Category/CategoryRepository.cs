@@ -2,60 +2,60 @@
 using Todo.Models;
 using Microsoft.EntityFrameworkCore;
 
-using Todo.Repositories.CategoryNamespace;
+using Todo.Repositories.CategoriesNamespace;
 
-namespace Todo.Repositories.CategoryNamespace
+namespace Todo.Repositories.CategoriesNamespace
 {
 
 
    
         
 
-        public class CategoryRepository : ICategoryRepository
+        public class CategoriesRepository : ICategoriesRepository
         {
             private readonly ApplicationDbContext _DbContext;
-            public CategoryRepository(ApplicationDbContext DbContext)
+            public CategoriesRepository(ApplicationDbContext DbContext)
             {
                 _DbContext = DbContext;
 
 
             }
 
-            // public async Task AddCategory(CategoryItem item)
-        public async Task Add(CategoryItem item)
+            // public async Task AddCategories(CategoriesItem item)
+        public async Task Add(CategoriesItem item)
         {
             
-                _DbContext.CategoryItems.Add(item);
+                _DbContext.CategoriesItems.Add(item);
                 await _DbContext.SaveChangesAsync();
         
         }
 
            
 
-            public async Task Update(CategoryItem item)
+            public async Task Update(CategoriesItem item)
             {
-                _DbContext.CategoryItems.Update(item);
+                _DbContext.CategoriesItems.Update(item);
                 await _DbContext.SaveChangesAsync();
             }
-            public async Task<List<CategoryItem>> Get()
+            public async Task<List<CategoriesItem>> Get()
             {
-                return await _DbContext.CategoryItems.ToListAsync();
+                return await _DbContext.CategoriesItems.ToListAsync();
             }
 
-            public async Task<CategoryItem> Get(int id)
+            public async Task<CategoriesItem> Get(int id)
             {
-                return await _DbContext.CategoryItems.FindAsync(id);
+                return await _DbContext.CategoriesItems.FindAsync(id);
 
             }
 
-            public async Task Delete(CategoryItem item)
+            public async Task Delete(CategoriesItem item)
             {
-                _DbContext.CategoryItems.Remove(item);
+                _DbContext.CategoriesItems.Remove(item);
                 await _DbContext.SaveChangesAsync();
             }
 
-
-        }
+        
+    }
     }
 
 

@@ -1,25 +1,18 @@
-﻿using System.Drawing;
-
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 namespace Todo.Models
 {
-    public class CategoryItem
+    public class CategoriesItem
     {
-        public int id { get; set; } 
+        [Key] // Primärschlüssel
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // DB generiert automatisch
+        public int id { get; set; }
         public string name { get; set; }
-        
-        
-        
-
-        public CategoryItem(int Id, String Name, int ID)
+        public CategoriesItem(int Id, string Name)
         {
             id = Id;
             name = Name;
-            
-           
         }
-
-        public CategoryItem() { } // Default constructor for EF Core
+        public CategoriesItem() { }
     }
-
 }
-
