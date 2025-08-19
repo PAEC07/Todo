@@ -25,9 +25,10 @@ namespace Todo.Service
         {
             await _repo.Add(item);
         }
-        public async Task Remove(CategoriesItem item)
-        {
-            await _repo.Add(item);
+        
+
+        public async Task Remove(CategoriesItem item) {
+            await _repo.RemoveById(item.id);
         }
 
         public async Task UpdateCategoriesItem(CategoriesItem item)

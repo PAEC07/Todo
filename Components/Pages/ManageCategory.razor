@@ -50,9 +50,6 @@
 <br />
 
 <div class="grid-container grid-header">
-    <div class="grid-cell">
-        <butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => Categories = Categories.OrderBy(i => i.id).ToList()">ID</butten>
-    </div>
     <div class="grid-cell"><button class="btn btn-close-white" style="font-weight: bold" @onclick="() => Categories = Categories.OrderBy(t => t.name).ToList()"> Titel</button></div>
     <div class="grid-cell ">Aktionen</div>
 
@@ -63,8 +60,9 @@
 @foreach (var CategorieItem in Categories)
 {
     <div class="grid-container grid-row">
-        <div class="grid-cell">@CategorieItem.id</div>
-        @if (editId == CategorieItem.id)
+        <div class="grid-container grid-cell ">
+
+        @if (editId2 == CategorieItem.id)
         {
             <div class="grid-cell"><input class="form-control" @bind="EditCategory" /></div>
         }
@@ -72,18 +70,31 @@
         {
             <div class="grid-cell">@CategorieItem.name</div>
         }
-      
-        @if (editId == CategorieItem.id)
-        {
-            <button class="btn btn-success btn-sm me-1" @onclick="() => SaveEdit(CategorieItem)">Fertig</button>
-            <button class="btn btn-secondary btn-sm" @onclick="CancelEdit">Zurück</button>
-        }else{
-
-        <button class="btn btn-primary btn-sm me-1"  @onclick="() => StartEdit(CategorieItem)">Bearbeiten</button>
-            <butten class="btn btn-danger btn-sm me-1" @onclick="() =>RemoveCategorie(CategorieItem)">Löschen</butten>
-        }
-
         </div>
+      
+            <div class="grid-container grid-cell ">
+        
+        
+            <div class="grid-cell">
+                @if (editId2 == CategorieItem.id)
+                {
+                    <button class="btn btn-success btn-sm me-1" @onclick="() => SaveEdit(CategorieItem)">Fertig</button>
+                    <button class="btn btn-secondary btn-sm" @onclick="CancelEdit">Zurück</button>
+                }
+                else
+                {
+
+
+
+
+                    <button class="btn btn-danger btn-sm me" @onclick="() => RemoveCategorie(CategorieItem)">Löschen</button>
+                    <button class="btn btn-primary btn-sm" @onclick="() => StartEdit(CategorieItem)">Bearbeiten</button>
+                }
+            </div>
+            </div>
+            </div>
+        
+        
 }
 
 
@@ -92,7 +103,7 @@
 <style>
     .grid-container {
     display: grid;
-    grid-template-columns: 50px 150px 115px 150px 150px 300px 200px 200px;
+    grid-template-columns:300px 1fr auto  ;
     align-items: center;
     gap: 10px;
     margin-bottom: 7px;
@@ -129,7 +140,7 @@
     //-------------------Services and Repositories------------------
     private TodoService TodoService { get; set; } = default!;
     private ServiceCategories serviceCategoriess { get; set; } = default!;
-    private List<TodoItem> TodoList = new();
+    
     private List<CategoriesItem> Categories = new();
 
 
@@ -137,15 +148,10 @@
 
     //-------------------Parameter-------------------
 
-    private string newTitle = "";
-    private string newDiscription = "";
     private string newCategory = "";
 
-    public string EditTitle = "";
-    private string EditDiscription = "";
     private string EditCategory = "";
 
-    private int editId;
     private int editId2;
 
 
@@ -176,28 +182,7 @@
 
 
     //-----------------------------Add----------------------------
-    private async void Add()
-    {
-        if (string.IsNullOrWhiteSpace(newTitle) || string.IsNullOrWhiteSpace(newDiscription))
-        {
-            return; // Eingabe überprüfen
-        }
-        var newTodo = new TodoItem
-            {
-                Titel = newTitle,
-                Discription = newDiscription,
-                CategoriesName = newCategory
-            };
-
-        await TodoService.AddTodoItem(newTodo);
-
-        newTitle = String.Empty;
-        newDiscription = String.Empty;
-		newCategory = String.Empty;
-        await TodoService.GetAllTodoItems().ContinueWith(t => TodoList = t.Result);
-        StateHasChanged();
-    }
-
+    
 	public async Task AddCategory()
 	{
 		if (string.IsNullOrWhiteSpace(newCategory))
@@ -218,7 +203,7 @@
 
     private async void StartEdit(CategoriesItem item)
     {
-        editId = item.id;
+        editId2 = item.id;
         EditCategory = item.name;
         
         ServiceCategories.StartEdit(item, EditCategory);
@@ -226,7 +211,7 @@
 
     private void CancelEdit()
     {
-        editId = 0;
+        editId2 = 0;
         EditCategory = String.Empty;
         
         StateHasChanged();
@@ -235,7 +220,7 @@
 
     private async void SaveEdit(CategoriesItem item)
     {
-        editId = 0;
+        editId2 = 0;
         await ServiceCategories.SaveEdit(item, EditCategory);
     }
 
@@ -245,8 +230,8 @@
 
     {
         await ServiceCategories.Remove(item);
-        await ServiceCategories.GetAllCategoriesItems();
-        StateHasChanged();
+        Categories = await ServiceCategories.GetAllCategoriesItems();
+            StateHasChanged();
     }
 
 

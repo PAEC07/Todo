@@ -35,14 +35,14 @@
         <ul class="dropdown-menu" style="display: @(isDropdownOpen ? "block" : "none");">
             @foreach (var option in Categories)
             {
-                <li><a class="dropdown-item" href="#" @onclick="() => SelectOption(option.name)">@option</a></li>
+                <li><a class="dropdown-item" href="#" @onclick="() => SelectOption(option.name)">@option.name</a></li>
             }
         </ul>
         <butten class=" btn btn-outline-dark " @onclick="NavigateToCategoriess">Manage Categoriess</butten>
-        
+
     </div>
-        <button class="btn btn-dark" @onclick="Add">Hinzufügen</button>
-    
+    <button class="btn btn-dark" @onclick="Add">Hinzufügen</button>
+
 
 
 
@@ -136,8 +136,8 @@
                 }
 
 
-                <button class="btn btn-danger btn-sm me-1" @onclick="() => RemoveTodo(todoItem)">Löschen</button>
                 <button class="btn btn-primary btn-sm" @onclick="() => StartEdit(todoItem)">Bearbeiten</button>
+                <button class="btn btn-danger btn-sm me-1" @onclick="() => RemoveTodo(todoItem)">Löschen</button>
             }
         </div>
     </div>
@@ -147,31 +147,31 @@
 
 <style>
     .grid-container {
-        display: grid;
-        grid-template-columns: 50px 150px 115px 150px 150px 300px 200px 200px;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 7px;
+    display: grid;
+    grid-template-columns: 50px 150px 115px 150px 150px 300px 200px 200px;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 7px;
     }
 
     .grid-header {
-        font-weight: bold;
-        border-bottom: 2px solid #ccc;
-        padding-bottom: 10px;
+    font-weight: bold;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
     }
 
     .grid-row {
-        padding: 5px 0;
-        border-bottom: 1px solid #eee;
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
     }
 
     .grid-cell {
-        overflow: hidden;
+    overflow: hidden;
     }
 
     .form-control {
-        width: 100%;
-        padding: 4px;
+    width: 100%;
+    padding: 4px;
     }
 </style>
 
@@ -197,6 +197,7 @@
 
     public string EditTitle = "";
     private string EditDiscription = "";
+    private string selct = "";
 
     private int editId;
 
@@ -207,6 +208,8 @@
 
         TodoService service = new TodoService(IReposetory);
         TodoService = service;
+        Categories = await ServiceCategories.GetAllCategoriesItems();
+
         TodoList = await TodoService.GetAllTodoItems();
         editId = 0; // Initialisieren der editId
         newTitle = String.Empty;
@@ -223,7 +226,7 @@
 
     public void NavigateToCategoriess()
     {
-        
+
         NavigationManager.NavigateTo("/ManageCategories");
     }
 
@@ -238,11 +241,12 @@
         var newTodo = new TodoItem
             {
                 Titel = newTitle,
-                Discription = newDiscription
+                Discription = newDiscription,
+                CategoriesName = SelectedOption,
             };
 
         await TodoService.AddTodoItem(newTodo);
-
+        SelectedOption = "Select an Option";
         newTitle = String.Empty;
         newDiscription = String.Empty;
         await TodoService.GetAllTodoItems().ContinueWith(t => TodoList = t.Result);

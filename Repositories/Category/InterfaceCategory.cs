@@ -15,7 +15,7 @@ namespace Todo.Repositories.CategoriesNamespace
 
         internal Task Update(CategoriesItem CategoriesItem);
 
-        internal Task Delete(CategoriesItem CategoriesItem);
+        internal Task Remove(CategoriesItem CategoriesItem);
 
 
     }

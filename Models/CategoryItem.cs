@@ -8,11 +8,19 @@ namespace Todo.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)] // DB generiert automatisch
         public int id { get; set; }
         public string name { get; set; } = "";
-        public CategoriesItem(int Id, string Name)
+        public CategoriesItem( string Name)
         {
-            id = Id;
+            
             name = Name;
         }
+
+        public override string ToString()
+        {
+            
+            return name;
+        }
+
+
         public CategoriesItem() { }
     }
 }
