@@ -34,7 +34,27 @@ namespace Todo.Service
         {
             await _repo.Update(item);
         }
-        public async Task<List<CategoriesItem>> GetCategoriesItems()
+
+        int editid = -1;
+        public void StartEdit(CategoriesItem item, string editname)
+        {
+            if (item == null || item.name == null)
+            {
+                return;
+            }
+
+            editid = item.id;
+            editname = item.name;
+
+        }
+
+        public async Task SaveEdit(CategoriesItem item, string name)
+        {
+            item.name = name;
+            await _repo.Update(item);
+        }
+
+        public async Task<List<CategoriesItem>> GetAllCategoriesItems()
         {
             return await _repo.Get();
 

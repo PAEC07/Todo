@@ -1,56 +1,98 @@
 ﻿@page "/ManageCategories"
-@using Todo.Repositories.CategoriesNamespace
-@using Todo.Repositories
+
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.EntityFrameworkCore
+@using Repository
+@using Todo
+@using Todo.Auslesen_des_Nutzers
+@using Todo.Data
+@using Todo.Models
+@using Todo.Repositories.Todo
 @using Todo.Service
+@using Todo.Service.ServiceTodo
+@using Todo.Repositories.CategoriesNamespace
 
+
+@inject TodoIRepository IReposetory
+@inject TodoService todoService
+@inject NavigationManager NavigationManager
 @inject ServiceCategories ServiceCategories
-@inject CategoriesRepository CategoriesRepository
-
-<h3>Hier können sie ihre Todos bearbeiten </h3>
-<input type="text" class="form-control mb-1" @bind="Name" placeholder="Neue Categories" />
-<button class="btn btn-dark" @onclick="Add">Hinzufügen</button>
-<div class="grid-container grid-header">
-<div class="grid-cell">
-    <butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => CategoriesList = CategoriesList.OrderBy(i => i.id).ToList()">ID</butten>
-</div>
-
-<div class="grid-cell">
-        <butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => CategoriesList = CategoriesList.OrderBy(i => i.name).ToList()">Name</butten>
-</div>
-</div>
+@inject ApplicationDbContext DbContext
+@inject CategoriesRepository ICategoriesRepository
 
 
 
 
 
+<h3>Categorys</h3>
 
 
-@foreach (var CategoriesItem in CategoriesList)
-{
+
+@rendermode InteractiveServer
 
 
-<div class="grid-container grid-row">
-    <div class="grid-cell">
-    @CategoriesItem.id;
-    </div>
+
     
-<div class="grid-container grid-row">
-    @CategoriesItem.name;
+    <input type="text" class="form-control mb-1" @bind="newCategory" placeholder="Neue Category" />
+    <button class="btn btn-dark" @onclick="AddCategory">Hinzufügen</button>
+    <button class="btn btn-outline-dark" @onclick="NavigateToHome">Back</button>
+
+
+    
+   
+
+
+
+
+
+
+
+<br />
+
+<div class="grid-container grid-header">
+    <div class="grid-cell">
+        <butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => Categories = Categories.OrderBy(i => i.id).ToList()">ID</butten>
     </div>
+    <div class="grid-cell"><button class="btn btn-close-white" style="font-weight: bold" @onclick="() => Categories = Categories.OrderBy(t => t.name).ToList()"> Titel</button></div>
+    <div class="grid-cell ">Aktionen</div>
 
-</div>    
+    
 
+</div>
 
+@foreach (var CategorieItem in Categories)
+{
+    <div class="grid-container grid-row">
+        <div class="grid-cell">@CategorieItem.id</div>
+        @if (editId == CategorieItem.id)
+        {
+            <div class="grid-cell"><input class="form-control" @bind="EditCategory" /></div>
+        }
+        else
+        {
+            <div class="grid-cell">@CategorieItem.name</div>
+        }
+      
+        @if (editId == CategorieItem.id)
+        {
+            <button class="btn btn-success btn-sm me-1" @onclick="() => SaveEdit(CategorieItem)">Fertig</button>
+            <button class="btn btn-secondary btn-sm" @onclick="CancelEdit">Zurück</button>
+        }else{
 
+        <button class="btn btn-primary btn-sm me-1"  @onclick="() => StartEdit(CategorieItem)">Bearbeiten</button>
+            <butten class="btn btn-danger btn-sm me-1" @onclick="() =>RemoveCategorie(CategorieItem)">Löschen</butten>
+        }
+
+        </div>
 }
 
 
 
-<style>
 
-.grid-container {
+<style>
+    .grid-container {
     display: grid;
-    grid-template-columns: 50px 150px;
+    grid-template-columns: 50px 150px 115px 150px 150px 300px 200px 200px;
     align-items: center;
     gap: 10px;
     margin-bottom: 7px;
@@ -75,71 +117,139 @@
     width: 100%;
     padding: 4px;
     }
-
 </style>
 
 
 
 
+
+
+
 @code {
-
-
-
-
-
-
-
-
     //-------------------Services and Repositories------------------
+    private TodoService TodoService { get; set; } = default!;
     private ServiceCategories serviceCategoriess { get; set; } = default!;
-    private List<CategoriesItem> CategoriesList = new();
-    
+    private List<TodoItem> TodoList = new();
+    private List<CategoriesItem> Categories = new();
+
+
 
 
     //-------------------Parameter-------------------
-    private string Name { get; set; }
+
+    private string newTitle = "";
+    private string newDiscription = "";
+    private string newCategory = "";
+
+    public string EditTitle = "";
+    private string EditDiscription = "";
+    private string EditCategory = "";
+
+    private int editId;
+    private int editId2;
+
 
     //----------------------OnInitializedAsync-------------------
     protected override async Task OnInitializedAsync()
     {
 
+        ServiceCategories service1 = new ServiceCategories(ICategoriesRepository);
+        ServiceCategories = service1;
+        Categories = await ServiceCategories.GetAllCategoriesItems();
+		editId2 = 0; // Initialisieren der editId
+        newCategory = String.Empty;
+        EditCategory = String.Empty;
 
         
 
-    CategoriesList = await ServiceCategories.GetCategoriesItems();
-
-
-
 
 
     }
 
+    //----------------------NavigateToCategories----------------------
 
+    public void NavigateToHome()
+    {
+
+        NavigationManager.NavigateTo("/");
+    }
 
 
     //-----------------------------Add----------------------------
-
     private async void Add()
     {
-
-        var newCategories = new CategoriesItem
+        if (string.IsNullOrWhiteSpace(newTitle) || string.IsNullOrWhiteSpace(newDiscription))
+        {
+            return; // Eingabe überprüfen
+        }
+        var newTodo = new TodoItem
             {
-                name = Name
+                Titel = newTitle,
+                Discription = newDiscription,
+                CategoriesName = newCategory
             };
 
-        await ServiceCategories.AddCategoriesItem(newCategories);
+        await TodoService.AddTodoItem(newTodo);
 
-        Name = String.Empty;
-       
+        newTitle = String.Empty;
+        newDiscription = String.Empty;
+		newCategory = String.Empty;
+        await TodoService.GetAllTodoItems().ContinueWith(t => TodoList = t.Result);
         StateHasChanged();
-		// Refresh the Categories list after adding a new item
-        CategoriesList = await serviceCategoriess.GetCategoriesItems();
     }
 
+	public async Task AddCategory()
+	{
+		if (string.IsNullOrWhiteSpace(newCategory))
+		{
+			return; // Eingabe überprüfen
+		}
+		var newCategorieItem = new CategoriesItem
+			{
+				name = newCategory
+			};
+		await ServiceCategories.AddCategoriesItem(newCategorieItem);
+		newCategory = String.Empty;
+		await ServiceCategories.GetAllCategoriesItems().ContinueWith(t => Categories = t.Result);
+		StateHasChanged();
+	}
+
+    //------------------------------Edit----------------------------
+
+    private async void StartEdit(CategoriesItem item)
+    {
+        editId = item.id;
+        EditCategory = item.name;
+        
+        ServiceCategories.StartEdit(item, EditCategory);
+    }
+
+    private void CancelEdit()
+    {
+        editId = 0;
+        EditCategory = String.Empty;
+        
+        StateHasChanged();
+        return;
+    }
+
+    private async void SaveEdit(CategoriesItem item)
+    {
+        editId = 0;
+        await ServiceCategories.SaveEdit(item, EditCategory);
+    }
+
+
+    //-----------------------------Remove------------------------------
+    private async void RemoveCategorie(CategoriesItem item)
+
+    {
+        await ServiceCategories.Remove(item);
+        await ServiceCategories.GetAllCategoriesItems();
+        StateHasChanged();
+    }
+
+
     
-
-
-
 }
-
 
