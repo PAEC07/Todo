@@ -24,7 +24,11 @@
 
 
 
-<h3>Categorys</h3>
+<h3>
+    <b>
+    Categorys
+    </b>
+</h3>
 
 
 
@@ -32,13 +36,72 @@
 
 
 
-    
+    <div class="grid-container1">
     <input type="text" class="form-control mb-1" @bind="newCategory" placeholder="Neue Category" />
     <button class="btn btn-dark" @onclick="AddCategory">Hinzufügen</button>
-    <button class="btn btn-outline-dark" @onclick="NavigateToHome">Back</button>
-
 
     
+    <button class="btn btn-outline-dark" @onclick="NavigateToHome"> Zurück</button>
+    </div>
+   
+
+
+    <style>
+        .grid-container-back{
+        display:grid;
+        grid-template-columns: 300px;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 7px;
+        margin-top: 10px;
+        }
+
+        .btn-navigate-back{
+        background-color: transparent;
+        border: medium;
+        color: #000000 ;
+        cursor: pointer;
+        font-size: 18px;
+        padding: 5;
+        font-family: Arial, sans-serif;
+        transition: color 0.3s ease;
+        margin-left: 10px;
+        }
+
+    .grid-container-input {
+        display: grid;
+        grid-template-columns: 500px;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 7px;
+    }
+
+    .grid-header-input {
+        font-weight: bold;
+        border-bottom: 2px solid #ccc;
+        padding-bottom: 10px;
+    }
+
+    .grid-row-input {
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .grid-cell-input {
+        overflow: hidden;
+    }
+
+    .form-control-input {
+        width: 100%;
+        padding: 4px;
+    }
+
+
+
+
+
+
+    </style>
    
 
 

@@ -9,7 +9,6 @@
 @using Todo.Repositories.Todo
 @using Todo.Service
 @using Todo.Service.ServiceTodo
-@using Todo.Service.ServiceTodo
 
 @inject NavigationManager NavigationManager
 @inject ServiceCategories ServiceCategories
@@ -19,17 +18,27 @@
 
 
 
+
 @rendermode InteractiveServer
 
-<h3>TODOs</h3>
+<h3>
+<b>
+TODOs
+</b>
+</h3>
 
-<div>
-    <input type="text" class="form-control mb-1" @bind="newTitle" placeholder="Neues TODO Titel" />
-    <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
-
+<div class="grid-container-input">
+    <div class="grid-header-input">
+        <div class="grid-row-input">
+            <div class="grid-cell-input">
+                    <input type="text" class="form-control mb-1" @bind="newTitle" placeholder="Neues TODO Titel" />
+                </div>
+            <div class="grid-cell-input">
+                    <input type="text" class="form-control mb-1" @bind="newDiscription" placeholder="Neue Beschreibung" />
+            </div>
 
     <div class="dropdown" style="margin-bottom: 10px;">
-        <button class="btn btn-outline-dark dropdown-toggle" @onclick="ToggleDropdown">
+                <button class="btn btn-dark" @onclick="ToggleDropdown">
             @SelectedOption
         </button>
         <ul class="dropdown-menu" style="display: @(isDropdownOpen ? "block" : "none");">
@@ -38,13 +47,23 @@
                 <li><a class="dropdown-item" href="#" @onclick="() => SelectOption(option.name)">@option.name</a></li>
             }
         </ul>
-        <butten class=" btn btn-outline-dark " @onclick="NavigateToCategoriess">Manage Categoriess</butten>
-
+        <butten class=" manage-Categories " @onclick="NavigateToCategoriess">Manage Categoriess</butten>
+        </div>
     </div>
-    <button class="btn btn-dark" @onclick="Add">Hinzufügen</button>
+        <div class="grid-container-input">
+        <div class="grid-row-input">
+
+                <button class="btn btn-dark" style="height:auto;width:500px" @onclick="Add">Hinzufügen</button>
+                <button class="btn btn-danger" style="height:auto;width:90px" @onclick="clearInputFields">Löschen</button>
+    </div>
+    </div>
+    </div>
+            
+    
 
 
 
+    
 
     @code {
         private bool isDropdownOpen = false;
@@ -65,22 +84,66 @@
     <br />
 </div>
 
+<style>
+    
+
+    .grid-container-input {
+		display: grid;
+		grid-template-columns: 600px;
+		align-items: center;
+		gap: 15px;
+		margin-bottom: 15px;
+	}
+
+    .grid-header-input {
+      
+		font-weight: bold;
+		border-bottom: 2px  #ccc;
+		padding-bottom: 10px;
+	}
+
+    .grid-row-input {
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .grid-cell-input {
+		overflow: hidden;
+	}
+
+    .manage-Categories {
+        background-color: transparent; 
+        border: none; 
+        color: #5c5c5c; 
+
+        cursor: pointer; 
+        font-size: 14px; 
+        padding: 5;
+        font-family: Arial, sans-serif;
+        transition: color 0.3s ease; 
+        margin-left: 10px;
+    }
+
+        
 
 
-<br />
 
-<div class="grid-container grid-header">
-    <div class="grid-cell">
+</style>
+
+<br/>
+
+<div class="grid-container-table grid-header-table">
+    <div class="grid-cell-table">
         <butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.Id).ToList()">ID</butten>
     </div>
-    <div class="grid-cell"><button class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(t => t.Titel).ToList()"> Titel</button></div>
-    <div class="grid-cell">Beschreibung</div>
-    <div class="grid-cell"><butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.Erledigt).ToList()">Status</butten></div>
+    <div class="grid-cell-table"><button class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(t => t.Titel).ToList()"> Titel</button></div>
+    <div class="grid-cell-table">Beschreibung</div>
+    <div class="grid-cell-table"><butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.CategoriesName).ToList()">Categories</butten></div>
+    <div class="grid-cell-table"><butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.Erledigt).ToList()">Status</butten></div>
+    <div class="grid-cell-table">Aktionen</div>
 
 
-    <div class="grid-cell"><butten class="btn btn-close-white" style="font-weight: bold" @onclick="() => TodoList = TodoList.OrderBy(i => i.CategoriesName).ToList()">Categories</butten></div>
 
-    <div class="grid-cell">Aktionen</div>
 
 
 </div>
@@ -88,18 +151,28 @@
 
 @foreach (var todoItem in TodoList)
 {
-    <div class="grid-container grid-row">
-        <div class="grid-cell">@todoItem.Id</div>
+    <div class="grid-container-table grid-row-table">
+        <div class="grid-cell-table">@todoItem.Id</div>
 
         @if (editId == todoItem.Id)
         {
-            <div class="grid-cell"><input class="form-control" @bind="EditTitle" /></div>
-            <div class="grid-cell"><input class="form-control" @bind="EditDiscription" /></div>
+            <div class="grid-cell-table"><input class="form-control" @bind="EditTitle" /></div>
+            <div class="grid-cell-table"><input class="form-control" @bind="EditDiscription" /></div>
+            <div class="grid-cell-table">
+				<select class="form-select" @bind="todoItem.CategoriesName">
+					<option value="">Select a Category</option>
+					@foreach (var category in Categories)
+					{
+						<option value="@category.name">@category.name</option>
+					}
+				</select>
+			</div>
         }
         else
         {
-            <div class="grid-cell">@todoItem.Titel</div>
-            <div class="grid-cell">@todoItem.Discription</div>
+            <div class="grid-cell-table">@todoItem.Titel</div>
+            <div class="grid-cell-table">@todoItem.Discription</div>
+            <div class="grid-cell-table">@todoItem.CategoriesName</div>
         }
 
         <div class="grid-cell">
@@ -113,10 +186,9 @@
             }
         </div>
 
-        <div class="grid-container grid-row">@todoItem.CategoriesName</div>
 
 
-        <div class="grid-cell">
+        <div class="grid-cell-table">
             @if (editId == todoItem.Id)
             {
                 <button class="btn btn-success btn-sm me-1" @onclick="() => SaveEdit(todoItem)">Fertig</button>
@@ -143,33 +215,31 @@
     </div>
 }
 
-
-
 <style>
-    .grid-container {
+    .grid-container-table {
     display: grid;
-    grid-template-columns: 50px 150px 115px 150px 150px 300px 200px 200px;
+    grid-template-columns: 100px 200px 165px 150px 150px 300px 200px 200px;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 7px;
+    gap: 15px;
+    margin-bottom: 15px;
     }
 
-    .grid-header {
+    .grid-header-table {
     font-weight: bold;
     border-bottom: 2px solid #ccc;
-    padding-bottom: 10px;
+    padding-bottom: 10px;q
     }
 
-    .grid-row {
+    .grid-row-table {
     padding: 5px 0;
     border-bottom: 1px solid #eee;
     }
 
-    .grid-cell {
+    .grid-cell-table {
     overflow: hidden;
     }
 
-    .form-control {
+    .form-control-table {
     width: 100%;
     padding: 4px;
     }
@@ -230,6 +300,13 @@
         NavigationManager.NavigateTo("/ManageCategories");
     }
 
+
+	public void clearInputFields()
+	{
+		newTitle = String.Empty;
+		newDiscription = String.Empty;
+		SelectedOption = "Select an Option";
+	}
 
     //-----------------------------Add----------------------------
     private async void Add()
