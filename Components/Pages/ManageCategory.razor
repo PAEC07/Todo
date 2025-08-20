@@ -25,9 +25,9 @@
 
 
 <h3>
-    <b>
-    Categorys
-    </b>
+	<b>
+		Categorys
+	</b>
 </h3>
 
 
@@ -36,73 +36,68 @@
 
 
 
-    <div class="grid-container1">
-    <input type="text" class="form-control mb-1" @bind="newCategory" placeholder="Neue Category" />
-    <button class="btn btn-dark" @onclick="AddCategory">Hinzufügen</button>
-
-    
-    <button class="btn btn-outline-dark" @onclick="NavigateToHome"> Zurück</button>
-    </div>
-   
+<div class="grid-container1">
+	<input type="text" class="form-control mb-1" @bind="newCategory" placeholder="Neue Category" />
+	<button class="btn btn-dark" @onclick="AddCategory">Hinzufügen</button>
 
 
-    <style>
-        .grid-container-back{
-        display:grid;
-        grid-template-columns: 300px;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 7px;
-        margin-top: 10px;
-        }
-
-        .btn-navigate-back{
-        background-color: transparent;
-        border: medium;
-        color: #000000 ;
-        cursor: pointer;
-        font-size: 18px;
-        padding: 5;
-        font-family: Arial, sans-serif;
-        transition: color 0.3s ease;
-        margin-left: 10px;
-        }
-
-    .grid-container-input {
-        display: grid;
-        grid-template-columns: 500px;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 7px;
-    }
-
-    .grid-header-input {
-        font-weight: bold;
-        border-bottom: 2px solid #ccc;
-        padding-bottom: 10px;
-    }
-
-    .grid-row-input {
-        padding: 5px 0;
-        border-bottom: 1px solid #eee;
-    }
-
-    .grid-cell-input {
-        overflow: hidden;
-    }
-
-    .form-control-input {
-        width: 100%;
-        padding: 4px;
-    }
+	<button class="btn btn-outline-dark" @onclick="NavigateToHome"> Zurück</button>
+</div>
 
 
 
+<style>
+	.grid-container-back {
+		display: grid;
+		grid-template-columns: 300px;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 7px;
+		margin-top: 10px;
+	}
 
+	.btn-navigate-back {
+		background-color: transparent;
+		border: medium;
+		color: #000000;
+		cursor: pointer;
+		font-size: 18px;
+		padding: 5;
+		font-family: Arial, sans-serif;
+		transition: color 0.3s ease;
+		margin-left: 10px;
+	}
 
+	.grid-container-input {
+		display: grid;
+		grid-template-columns: 500px;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 7px;
+	}
 
-    </style>
-   
+	.grid-header-input {
+		font-weight: bold;
+		border-bottom: 2px solid #ccc;
+		padding-bottom: 10px;
+	}
+
+	.grid-row-input {
+		padding: 5px 0;
+		border-bottom: 1px solid #eee;
+	}
+
+	.grid-cell-input {
+		overflow: hidden;
+	}
+
+	.form-control-input {
+		width: 100%;
+		padding: 4px;
+	}
+
+</style>
+
 
 
 
@@ -113,84 +108,84 @@
 <br />
 
 <div class="grid-container grid-header">
-    <div class="grid-cell"><button class="btn btn-close-white" style="font-weight: bold" @onclick="() => Categories = Categories.OrderBy(t => t.name).ToList()"> Titel</button></div>
-    <div class="grid-cell ">Aktionen</div>
+	<div class="grid-cell"><button class="btn btn-close-white" style="font-weight: bold" @onclick="() => Categories = Categories.OrderBy(t => t.name).ToList()"> Titel</button></div>
+	<div class="grid-cell ">Aktionen</div>
 
-    
+
 
 </div>
 
 @foreach (var CategorieItem in Categories)
 {
-    <div class="grid-container grid-row">
-        <div class="grid-container grid-cell ">
+	<div class="grid-container grid-row">
+		<div class="grid-container grid-cell ">
 
-        @if (editId2 == CategorieItem.id)
-        {
-            <div class="grid-cell"><input class="form-control" @bind="EditCategory" /></div>
-        }
-        else
-        {
-            <div class="grid-cell">@CategorieItem.name</div>
-        }
-        </div>
-      
-            <div class="grid-container grid-cell ">
-        
-        
-            <div class="grid-cell">
-                @if (editId2 == CategorieItem.id)
-                {
-                    <button class="btn btn-success btn-sm me-1" @onclick="() => SaveEdit(CategorieItem)">Fertig</button>
-                    <button class="btn btn-secondary btn-sm" @onclick="CancelEdit">Zurück</button>
-                }
-                else
-                {
+			@if (editId2 == CategorieItem.id)
+			{
+				<div class="grid-cell"><input class="form-control" @bind="EditCategory" /></div>
+			}
+			else
+			{
+				<div class="grid-cell">@CategorieItem.name</div>
+			}
+		</div>
+
+		<div class="grid-container grid-cell ">
 
 
+			<div class="grid-cell">
+				@if (editId2 == CategorieItem.id)
+				{
+					<button class="btn btn-success btn-sm me-1" @onclick="() => SaveEdit(CategorieItem)">Fertig</button>
+					<button class="btn btn-secondary btn-sm" @onclick="CancelEdit">Zurück</button>
+				}
+				else
+				{
 
 
-                    <button class="btn btn-danger btn-sm me" @onclick="() => RemoveCategorie(CategorieItem)">Löschen</button>
-                    <button class="btn btn-primary btn-sm" @onclick="() => StartEdit(CategorieItem)">Bearbeiten</button>
-                }
-            </div>
-            </div>
-            </div>
-        
-        
+
+
+					<button class="btn btn-danger btn-sm me" @onclick="() => RemoveCategorie(CategorieItem)">Löschen</button>
+					<button class="btn btn-primary btn-sm" @onclick="() => StartEdit(CategorieItem)">Bearbeiten</button>
+				}
+			</div>
+		</div>
+	</div>
+
+
 }
 
 
 
 
 <style>
-    .grid-container {
-    display: grid;
-    grid-template-columns:300px 1fr auto  ;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 7px;
-    }
+	.grid-container {
+		display: grid;
+		grid-template-columns: 300px 1fr auto;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 7px;
+	}
 
-    .grid-header {
-    font-weight: bold;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 10px;
-    }
+	.grid-header {
+		font-weight: bold;
+		border-bottom: 2px solid #ccc;
+		padding-bottom: 10px;
+	}
 
-    .grid-row {
-    padding: 5px 0;
-    border-bottom: 1px solid #eee;
-    }
+	.grid-row {
+		padding: 5px 0;
+		border-bottom: 1px solid #eee;
+	}
 
-    .grid-cell {
-    overflow: hidden;
-    }
+	.grid-cell {
+		overflow: hidden;
+	}
 
-    .form-control {
-    width: 100%;
-    padding: 4px;
-    }
+	.form-control {
+		width: 100%;
+		padding: 4px;
+	}
 </style>
 
 
@@ -200,52 +195,52 @@
 
 
 @code {
-    //-------------------Services and Repositories------------------
-    private TodoService TodoService { get; set; } = default!;
-    private ServiceCategories serviceCategoriess { get; set; } = default!;
-    
-    private List<CategoriesItem> Categories = new();
+	//-------------------Services and Repositories------------------
+	private TodoService TodoService { get; set; } = default!;
+	private ServiceCategories serviceCategoriess { get; set; } = default!;
+
+	private List<CategoriesItem> Categories = new();
 
 
 
 
-    //-------------------Parameter-------------------
+	//-------------------Parameter-------------------
 
-    private string newCategory = "";
+	private string newCategory = "";
 
-    private string EditCategory = "";
+	private string EditCategory = "";
 
-    private int editId2;
+	private int editId2;
 
 
-    //----------------------OnInitializedAsync-------------------
-    protected override async Task OnInitializedAsync()
-    {
+	//----------------------OnInitializedAsync-------------------
+	protected override async Task OnInitializedAsync()
+	{
 
-        ServiceCategories service1 = new ServiceCategories(ICategoriesRepository);
-        ServiceCategories = service1;
-        Categories = await ServiceCategories.GetAllCategoriesItems();
+		ServiceCategories service1 = new ServiceCategories(ICategoriesRepository);
+		ServiceCategories = service1;
+		Categories = await ServiceCategories.GetAllCategoriesItems();
 		editId2 = 0; // Initialisieren der editId
-        newCategory = String.Empty;
-        EditCategory = String.Empty;
-
-        
+		newCategory = String.Empty;
+		EditCategory = String.Empty;
 
 
 
-    }
-
-    //----------------------NavigateToCategories----------------------
-
-    public void NavigateToHome()
-    {
-
-        NavigationManager.NavigateTo("/");
-    }
 
 
-    //-----------------------------Add----------------------------
-    
+	}
+
+	//----------------------NavigateToCategories----------------------
+
+	public void NavigateToHome()
+	{
+
+		NavigationManager.NavigateTo("/");
+	}
+
+
+	//-----------------------------Add----------------------------
+
 	public async Task AddCategory()
 	{
 		if (string.IsNullOrWhiteSpace(newCategory))
@@ -262,42 +257,42 @@
 		StateHasChanged();
 	}
 
-    //------------------------------Edit----------------------------
+	//------------------------------Edit----------------------------
 
-    private async void StartEdit(CategoriesItem item)
-    {
-        editId2 = item.id;
-        EditCategory = item.name;
-        
-        ServiceCategories.StartEdit(item, EditCategory);
-    }
+	private async void StartEdit(CategoriesItem item)
+	{
+		editId2 = item.id;
+		EditCategory = item.name;
 
-    private void CancelEdit()
-    {
-        editId2 = 0;
-        EditCategory = String.Empty;
-        
-        StateHasChanged();
-        return;
-    }
+		ServiceCategories.StartEdit(item, EditCategory);
+	}
 
-    private async void SaveEdit(CategoriesItem item)
-    {
-        editId2 = 0;
-        await ServiceCategories.SaveEdit(item, EditCategory);
-    }
+	private void CancelEdit()
+	{
+		editId2 = 0;
+		EditCategory = String.Empty;
 
+		StateHasChanged();
+		return;
+	}
 
-    //-----------------------------Remove------------------------------
-    private async void RemoveCategorie(CategoriesItem item)
-
-    {
-        await ServiceCategories.Remove(item);
-        Categories = await ServiceCategories.GetAllCategoriesItems();
-            StateHasChanged();
-    }
+	private async void SaveEdit(CategoriesItem item)
+	{
+		editId2 = 0;
+		await ServiceCategories.SaveEdit(item, EditCategory);
+	}
 
 
-    
+	//-----------------------------Remove------------------------------
+	private async void RemoveCategorie(CategoriesItem item)
+
+	{
+		await ServiceCategories.Remove(item);
+		Categories = await ServiceCategories.GetAllCategoriesItems();
+		StateHasChanged();
+	}
+
+
+
 }
 

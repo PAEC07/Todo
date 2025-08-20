@@ -13,21 +13,22 @@ namespace Todo.Service
     {
         readonly CategoriesRepository _repo;
 
-      
+
         public ServiceCategories(CategoriesRepository item)
         {
             _repo = item;
         }
 
-        
+
 
         public async Task AddCategoriesItem(CategoriesItem item)
         {
             await _repo.Add(item);
         }
-        
 
-        public async Task Remove(CategoriesItem item) {
+
+        public async Task Remove(CategoriesItem item)
+        {
             await _repo.RemoveById(item.id);
         }
 

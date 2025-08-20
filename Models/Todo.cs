@@ -31,7 +31,7 @@ namespace Todo.Models
         public string? Titel { get; set; }
         public string? Discription { get; set; }
 
-        public bool Erledigt { get; set; }
+        public bool Erledigt { get; set; } = false;
 
         public string? CategoriesName { get; set; } 
 
